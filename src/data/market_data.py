@@ -6,28 +6,33 @@ from config import settings
 
 class MarketData:
     def __init__(self):
-        self.base_url = settings.BASE_URL
+        self.base_url = "https://data.alpaca.markets"
         self.headers = {
             'APCA-API-KEY-ID': settings.ALPACA_API_KEY,
-            'APCA-API-SECRET-ID': settings.ALPACA_SECRET_KEY
+            'APCA-API-SECRET-KEY': settings.ALPACA_SECRET_KEY
         }
         print("market Data handler initialized")
 
     def get_historical_bars(self, symbol: str, timeframe: str, start: str, limit: int = 100):
         endpoint = f"/v2/stocks/{symbol}/bars"
         parms = {
-            "tymeframe": timeframe,
+            "timeframe": timeframe,
             "start": start,
             "limit": limit,
             "adjustment": "raw" #for pure price data
         }
         try:
             print(f"Fetching {limit} bars for {symbol} with timeframe {timeframe} starting from {start}...")
-            response = requests.get(f"{self.base_url}{endpoint}")
+            response = requests.get(
+                f"{self.base_url}{endpoint}",
+                headers=self.headers,
+                params=parms,
+                timeout=30,
+                )
             response.raise_for_status()
 
             data = response.json()
-
+            bars = data.get('bars', [])
             df = pd.DataFrame(data['bars'])
             if df.empty:
                 print(f"No data returned for {symbol}. The symbol might be incored or no data available for the period")
@@ -36,7 +41,7 @@ class MarketData:
             df['t'] = pd.to_datetime(df['t'])
             df.set_index('t', inplace=True)
             df.rename(columns={'o': 'open', 'h': 'high', 'l': 'low', 'c': 'close', 'v': 'volume'}, inplace=True)
-            df = df[['open', 'high', 'low', 'close,', 'volume']]
+            df = df[['open', 'high', 'low', 'close', 'volume']]
             
             print("Succesfully fetched and processed data")
             return df

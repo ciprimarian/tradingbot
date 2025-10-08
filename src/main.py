@@ -13,7 +13,7 @@ def run_data_fetch():
     historical_data = market_data_handler.get_historical_bars(
         symbol="TSLA",
         timeframe="1Day",
-        start="2025-01-01T:00:00Z"
+        start="2025-01-01T00:00:00Z"
     )
 
     if historical_data is not None:
