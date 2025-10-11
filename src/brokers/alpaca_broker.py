@@ -1,7 +1,7 @@
 #src/brokers/alpaca_broker.py
 
 import requests
-from requests.auth import settings
+from config import settings
 
 class AlpacaBroker:
     def __init__(self):
