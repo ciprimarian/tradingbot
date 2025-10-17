@@ -15,7 +15,7 @@ class MarketData:
 
     def get_historical_bars(self, symbol: str, timeframe: str, start: str, limit: int = 100):
         endpoint = f"/v2/stocks/{symbol}/bars"
-        parms = {
+        params = {
             "timeframe": timeframe,
             "start": start,
             "limit": limit,
@@ -26,7 +26,7 @@ class MarketData:
             response = requests.get(
                 f"{self.base_url}{endpoint}",
                 headers=self.headers,
-                params=parms,
+                params=params,
                 timeout=30,
                 )
             response.raise_for_status()
