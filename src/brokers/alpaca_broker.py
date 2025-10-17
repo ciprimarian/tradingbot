@@ -2,6 +2,7 @@
 
 import requests
 from config import settings
+import json
 
 class AlpacaBroker:
     def __init__(self):
@@ -23,4 +24,33 @@ class AlpacaBroker:
             return None
         except Exception as e:
             print(f"AN unexpected error occured: {e}")
+            return None
+        
+    def submit_order(self, symbol: str, qty: int, side: str):
+        endpoint = "/v2/orders"
+        order_data = {
+            "symbol": symbol,
+            "qty": qty,
+            "side": side,
+            "type": "market",
+            "time_in_force": "day"
+        }
+        print(f"\nSubbmiting {side} order for {qty} shares of {symbol}...")
+        try:
+            response = requests.post(
+                f"{self.base_url}{endpoint}",
+                headers=self.headers,
+                json=order_data
+            )
+            response.raise_for_status()
+            order_details = response.json()
+            print("Order submmited succesfully")
+            print("Order details:", order_details)
+            return order_details
+        except requests.exceptions.HTTPError as err:
+            print(f"HTTP Error submitting order: {err}")
+            print("Response body;", err.response.text)
+            return None
+        except Exception as e:
+            print(f"An unexpected error occured during order submission; {e}")
             return None
