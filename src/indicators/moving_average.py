@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-def calculate_sma(data: pd.DataFrame, period: int) ->pd.DataFrame:
+def calculate_sma(data: pd.DataFrame, period: int) -> pd.DataFrame:
     print(f"Calculateing {period} SMA")
 
     if 'close' not in data.columns:
