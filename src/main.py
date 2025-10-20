@@ -88,7 +88,7 @@ def main_bot_loop():
             latest_signal = df['position'].iloc[-1]
             print(f"LAtest saignal for {SYMBOL}: {latest_signal}")
 
-            if latest_signal == 1.0 and in_position:
+            if latest_signal == 1.0 and not in_position:
                 print("Buy signal detected. Placing BUY order.")
                 broker.submit_order(symbol=SYMBOL, qty=TRADE_QUANTITY, side="buy")
                 in_position = True
@@ -111,6 +111,19 @@ def main_bot_loop():
             time.sleep(60)
 
 if __name__ == "__main__":
-    run_connection_test()
-    run_data_fetch_and_strategy()
-    main_bot_loop()
+    parser = argparse.ArgumentParser(description="Algorithmic trading bot.")
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=['run_connection_test', 'run_data_fetch_and_strategy', 'main_bot_loop'],
+        required=True,
+        help="The mode to run the bot in"
+    )
+    args = parser.parse_args()
+
+    if args.mode == 'run_connection_test':
+        run_connection_test()
+    elif args.mode == 'run_data_fetch_and_strategy':
+        run_data_fetch_and_strategy()
+    elif args.mode == 'main_bot_loop':
+        main_bot_loop()    
