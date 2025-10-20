@@ -54,3 +54,20 @@ class AlpacaBroker:
         except Exception as e:
             print(f"An unexpected error occured during order submission; {e}")
             return None
+    
+    def get_open_position(self):
+        endpoint = "/v2/positions"
+        print("\nFetching open positions:")
+        try:
+            response = requests.get(f"{self.base_url}{endpoint}", headers=self.headers)
+            response.raise_for_status()
+            position_data = response.json()
+            print("Succesfully fetched positions.")
+            return position_data
+        except requests.exceptions.HTTPError as err:
+            print(f"HTTP Error submitting order: {err}")
+            print("Response body;", err.response.text)
+            return None
+        except Exception as e:
+            print(f"An unexpected error occured during order submission; {e}")
+            return None

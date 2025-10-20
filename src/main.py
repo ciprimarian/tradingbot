@@ -4,6 +4,7 @@ from brokers.alpaca_broker import AlpacaBroker
 from data.market_data import MarketData
 from indicators import moving_average
 from strategies.momentum_strategy import MovingAverageCrossover
+from risk_management.portfolio_manager import PortfolioManager
 import argparse
 import time
 
@@ -64,6 +65,18 @@ def run_data_fetch_and_strategy():
         print("\nFailed to fetch.")
     print("Data Fetch Completed")
 
+def run_portfolio_test():
+    print("---Running Portfolio Manager Test---")
+    broker = AlpacaBroker()
+    portfolio = PortfolioManager(broker)
+
+    print("\n-Initial Portfolio state-")
+    print(f"Cash: {portfolio.cash}")
+    print(f"Total Value: {portfolio.portfolio_value}")
+    print(f"Positions: {portfolio.positions}")
+
+    print("---Portfolio test complete---")
+
 def main_bot_loop():
    
     print("Starting Live Trading Bot")
@@ -115,7 +128,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mode",
         type=str,
-        choices=['run_connection_test', 'run_data_fetch_and_strategy', 'main_bot_loop'],
+        choices=['run_connection_test', 'run_data_fetch_and_strategy', 'run_portfolio_test', 'main_bot_loop'],
         required=True,
         help="The mode to run the bot in"
     )
@@ -125,5 +138,7 @@ if __name__ == "__main__":
         run_connection_test()
     elif args.mode == 'run_data_fetch_and_strategy':
         run_data_fetch_and_strategy()
+    elif args.mode == 'run_portfolio_test':
+        run_portfolio_test()
     elif args.mode == 'main_bot_loop':
         main_bot_loop()    
