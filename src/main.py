@@ -5,7 +5,6 @@ from data.market_data import MarketData
 from indicators import moving_average
 from strategies.momentum_strategy import MovingAverageCrossover
 from risk_management.portfolio_manager import PortfolioManager
-import argparse
 import time
 
 # ---BOT Configuration---
@@ -15,68 +14,6 @@ FAST_SMA = 5
 SLOW_SMA = 20
 TRADE_QUANTITY = 1
 
-def run_connection_test():
-    print("Running connection test to Alpaca...")
-    broker = AlpacaBroker()
-    broker.get_account_info()
-    print("Connection test completed.")
-
-def run_data_fetch_and_strategy():
-    print("Data fetch test...")
-    market_data_handler = MarketData()
-    historical_data = market_data_handler.get_historical_bars(
-        symbol="TSLA",
-        timeframe="1Day",
-        start="2025-01-01T00:00:00Z",
-        limit=200
-    )
-
-    if historical_data is not None:
-        print("\n Succesfully fetched historical data")
-        print(historical_data.tail())
-
-        #Calculate 20 days SMA
-        print("\nCalculate SMA")
-        data_with_slow_sma=moving_average.calculate_sma(historical_data, 20)
-        data_with_both_smas = moving_average.calculate_sma(data_with_slow_sma, 5)
-
-        #Display SMA
-        print("\nData woth 20-day SMA")
-        print(data_with_both_smas.tail())
-
-        #Run Strategy test
-        print("\n-Running Strategy test-")
-        strategy = MovingAverageCrossover(fast_period=5, slow_period=20)
-
-        #Generate Signals
-        signals_df = strategy.generate_signals(data_with_both_smas)
-
-        #Print results
-        print("\nStrategy signals generated:")
-        print(signals_df[['close', 'sma_5', 'sma_20', 'signal', 'position']].tail(20))
-        
-        #Calculate basic performance metrics
-        buy_signals = signals_df[signals_df['position'] == 1]
-        sel_signals = signals_df[signals_df['position'] == -1]
-
-        print(f"\nTotal buy signals: {len(buy_signals)}")
-        print(f"\nTotal sell signals: {len(sel_signals)}")
-    else:
-        print("\nFailed to fetch.")
-    print("Data Fetch Completed")
-
-def run_portfolio_test():
-    print("---Running Portfolio Manager Test---")
-    broker = AlpacaBroker()
-    portfolio = PortfolioManager(broker)
-
-    print("\n-Initial Portfolio state-")
-    print(f"Cash: {portfolio.cash}")
-    print(f"Total Value: {portfolio.portfolio_value}")
-    print(f"Positions: {portfolio.positions}")
-
-    print("---Portfolio test complete---")
-
 def main_bot_loop():
    
     print("Starting Live Trading Bot")
@@ -84,12 +21,22 @@ def main_bot_loop():
     broker = AlpacaBroker()
     market_data = MarketData()
     strategy = MovingAverageCrossover(fast_period=FAST_SMA, slow_period=SLOW_SMA)
-    in_position = False
+    portfolio = PortfolioManager(broker)
 
     while True:
         try:  
             print("\n................................")
             print(f"Timestamp: {time.ctime()}")
+            
+            # 1. Update our real-time state from the broker 
+            print("updating portfolio state...")
+            portfolio.update_portfolio()
+            current_qty = portfolio.get_position_qty(SYMBOL)
+            in_position = current_qty > 0
+            print(f"Current state: Holding {current_qty} shares of {SYMBOL}. (in_position = {in_position})")
+
+            # 2. Get data and generate signals
+            print("Fetching data and generating signals...")
             df = market_data.get_historical_bars(SYMBOL, TIMEFRAME, start="2025-01-01T00:00:00Z", limit=200)
             if df is None:
                 raise Exception("Could not fetch Market Data")
@@ -102,11 +49,11 @@ def main_bot_loop():
             print(f"LAtest saignal for {SYMBOL}: {latest_signal}")
 
             if latest_signal == 1.0 and not in_position:
-                print("Buy signal detected. Placing BUY order.")
+                print("Buy signal detected. Placing BUY order for {TRADE_QUANTITY} shares")
                 broker.submit_order(symbol=SYMBOL, qty=TRADE_QUANTITY, side="buy")
                 in_position = True
             elif latest_signal == -1.0 and in_position:
-                print("Sell signal detected. Placing SELL order.")
+                print("Sell signal detected. Placing SELL orderfor all {current_qty} shares.")
                 broker.submit_order(symbol=SYMBOL, qty=TRADE_QUANTITY, side="sell")
                 in_position = False
             else:
@@ -124,21 +71,4 @@ def main_bot_loop():
             time.sleep(60)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Algorithmic trading bot.")
-    parser.add_argument(
-        "--mode",
-        type=str,
-        choices=['run_connection_test', 'run_data_fetch_and_strategy', 'run_portfolio_test', 'main_bot_loop'],
-        required=True,
-        help="The mode to run the bot in"
-    )
-    args = parser.parse_args()
-
-    if args.mode == 'run_connection_test':
-        run_connection_test()
-    elif args.mode == 'run_data_fetch_and_strategy':
-        run_data_fetch_and_strategy()
-    elif args.mode == 'run_portfolio_test':
-        run_portfolio_test()
-    elif args.mode == 'main_bot_loop':
         main_bot_loop()    
