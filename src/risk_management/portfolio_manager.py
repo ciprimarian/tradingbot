@@ -21,7 +21,7 @@ class PortfolioManager:
             for position in open_positions:
                 symbol = position.get('symbol')
                 if symbol:
-                    self.position[symbol] = {
+                    self.positions[symbol] = {
                         'qty': int(position.get('qty', 0.0)),
                         'market_value': float(position.get('market_value', 0.0)),
                         'unrealized_pl': float(position.get('unrealized_pl', 0.0))
@@ -29,4 +29,4 @@ class PortfolioManager:
         print("Portfolio update complete")
 
     def get_position_qty(self, symbol: str) -> int:
-        return self.position.get(symbol, {}).get('qty', 0) #Return 0 if the symbol is not in the portfolio.
+        return self.positions.get(symbol, {}).get('qty', 0) #Return 0 if the symbol is not in the portfolio.
