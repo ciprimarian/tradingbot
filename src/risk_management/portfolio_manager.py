@@ -5,7 +5,7 @@ class PortfolioManager:
         self.broker = broker
         self.cash = 0.0
         self.portfolio_value = 0.0
-        self.position = {} #A dictionary to store positions by symbol
+        self.positions = {} #A dictionary to store positions by symbol
         self.update_portfolio() #Initial fetch during creation
 
     def update_portfolio(self):
@@ -15,7 +15,7 @@ class PortfolioManager:
             self.cash = float(account_info.get('cash', 0.0))
             self.portfolio_value = float(account_info.get('portfolio_value', 0.0))
 
-        open_positions = self.broker.get_open_position()
+        open_positions = self.broker.get_open_positions()
         self.positions = {} #Clear old positions
         if open_positions:
             for position in open_positions:
