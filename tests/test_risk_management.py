@@ -3,7 +3,7 @@
 from src.risk_management.portfolio_manager import PortfolioManager
 from src.brokers.alpaca_broker import AlpacaBroker
 
-def run_portfolio_test():
+def test_portfolio_manager     ():
     print("---Running Portfolio Manager Test---")
     broker = AlpacaBroker()
     portfolio = PortfolioManager(broker)

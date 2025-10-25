@@ -4,7 +4,7 @@ from src.data.market_data import MarketData
 from src.indicators import moving_average
 from src.strategies.momentum_strategy import MovingAverageCrossover
 
-def run_data_fetch_and_strategy():
+def test_data_fetch_and_strategy():
     print("Data fetch test...")
     market_data_handler = MarketData()
     historical_data = market_data_handler.get_historical_bars(

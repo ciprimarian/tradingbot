@@ -2,7 +2,7 @@
 
 from src.brokers.alpaca_broker import AlpacaBroker
 
-def connection_test():
+def test_connection():
     print("Running connection test to Alpaca...")
     broker = AlpacaBroker()
     account_info = broker.get_account_info()
