@@ -8,8 +8,8 @@ def test_data_fetch_and_strategy():
     print("Data fetch test...")
     market_data_handler = MarketData()
     historical_data = market_data_handler.get_historical_bars(
-        symbol="SYMBOL",
-        timeframe="TIMEFRAME",
+        symbol="TSLA",
+        timeframe="1Day",
         start="2025-01-01T00:00:00Z",
         limit=200
     )

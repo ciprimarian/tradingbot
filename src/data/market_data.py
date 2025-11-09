@@ -2,7 +2,7 @@
 
 import requests
 import pandas as pd
-from config import settings
+from src.config import settings
 
 class MarketData:
     def __init__(self):
@@ -34,7 +34,7 @@ class MarketData:
             data = response.json()
             bars = data.get('bars', [])
             df = pd.DataFrame(data['bars'])
-            if df.empty:
+            if not bars:
                 print(f"No data returned for {symbol}. The symbol might be incored or no data available for the period")
                 return None
             
