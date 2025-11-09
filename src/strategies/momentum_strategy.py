@@ -2,8 +2,8 @@
 
 import pandas as pd
 import numpy as np
-from .base_strategy import BaseStrategy
-
+from src.strategies.base_strategy import BaseStrategy
+ 
 class MovingAverageCrossover(BaseStrategy):
     """
     A strategy based on the crossoverof 2 simple MA.

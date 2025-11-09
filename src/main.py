@@ -1,11 +1,11 @@
 # src/main.py
-
-from brokers.alpaca_broker import AlpacaBroker
-from data.market_data import MarketData
-from indicators import moving_average
-from strategies.momentum_strategy import MovingAverageCrossover
-from risk_management.portfolio_manager import PortfolioManager
+import sys
 import time
+from src.brokers.alpaca_broker import AlpacaBroker
+from src.data.market_data import MarketData
+from src.indicators import moving_average
+from src.strategies.momentum_strategy import MovingAverageCrossover
+from src.risk_management.portfolio_manager import PortfolioManager
 
 # ---BOT Configuration---
 SYMBOL = 'TSLA'

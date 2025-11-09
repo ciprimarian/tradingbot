@@ -3,7 +3,7 @@
 from src.risk_management.portfolio_manager import PortfolioManager
 from src.brokers.alpaca_broker import AlpacaBroker
 
-def test_portfolio_manager     ():
+def test_portfolio_manager():
     print("---Running Portfolio Manager Test---")
     broker = AlpacaBroker()
     portfolio = PortfolioManager(broker)
@@ -13,6 +13,6 @@ def test_portfolio_manager     ():
     print(f"Total Value: {portfolio.portfolio_value}")
     print(f"Positions: {portfolio.positions}")
 
-    assert portfolio.cash is None, "Portfilio manager failed to get cahs."
+    assert portfolio.cash is not None, "Portfilio manager failed to get cahs."
     assert portfolio.portfolio_value is not None, "Portfolio manager failed to get portfolio value."
     print("---Portfolio test complete---")
