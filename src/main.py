@@ -6,7 +6,7 @@ from src.data.market_data import MarketData
 from src.indicators import moving_average
 from src.strategies.momentum_strategy import MovingAverageCrossover
 from src.risk_management.portfolio_manager import PortfolioManager
-
+from src.config.settings import CONFIG
 # ---BOT Configuration---
 SYMBOL = 'TSLA'
 TIMEFRAME = "1Day"

@@ -1,0 +1,22 @@
+trading:
+  symbol: "NVDA"
+  base_currency: "USD"
+
+data:
+  provider: "alpaca"
+  timeframe: "1Day"
+  start_date: "2024-01-01"
+  limit: 1000
+
+storage:
+  base_path: "data/processed"
+  format;"parquet"
+
+backtest:
+  initial_capital: 10000
+  comission_bps: 0.0
+  slippage_bps: 0.0
+  strategy: "moving_average_crossover"
+  strategy_params:
+    fast_period: 20
+    slow_period: 50

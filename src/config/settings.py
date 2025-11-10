@@ -1,6 +1,7 @@
 # config/settings.py
 
 import os
+import yaml
 from dotenv import load_dotenv
 
 #This line finds and loads the .env file in the project's root directory
@@ -22,3 +23,21 @@ else:
     # Check if the API keys are loaded correctly
 if not ALPACA_API_KEY or not ALPACA_SECRET_KEY:
     raise ValueError("ALPACA_API_KEY and ALPACA_SECRET_KEY must be set in the .env file.")
+
+def load_config(config_path='config.yaml'):
+    """
+    Loads the main YAML cofiguration file.
+    """
+    print(f"Loading cofiguration from {config_path}...")
+    try:
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+        return config
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Config file not found at path: {config_path}")
+    except Exeption as e:
+        print(f"Error loading config file: {e}")
+        retunr {}
+
+#Load the configuration and make it available for other modules
+CONFIG = load_config()        
