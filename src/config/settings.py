@@ -35,9 +35,9 @@ def load_config(config_path='config.yaml'):
         return config
     except FileNotFoundError:
         raise FileNotFoundError(f"Config file not found at path: {config_path}")
-    except Exeption as e:
+    except Exception as e:
         print(f"Error loading config file: {e}")
-        retunr {}
+        return {}
 
 #Load the configuration and make it available for other modules
 CONFIG = load_config()        
