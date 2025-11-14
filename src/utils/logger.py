@@ -25,7 +25,7 @@ DEFAULT_LOGGING_CONFIG = {
             "level": "DEBUG",
             "formatter": "standard",
             "filename": str(
-                Path(__file__).parent[2] / "logs" / "trading_bot.log"
+                Path(__file__).resolve().parents[2] / "logs" / "trading_bot.log"
             ),
         },
     },
@@ -50,6 +50,6 @@ def configure_logging(config: Optional[dict] = None):
     logging.config.dictConfig(config_dict)
     _LOGGING_CONFIGURED = True
 
-    def get_Logger(name: Optional[str] = None) -> logging.Logger:
-        configure_logging()
-        return logging.getLogger(name or "trading_bot")
+def get_logger(name: Optional[str] = None) -> logging.Logger:
+     configure_logging()
+     return logging.getLogger(name or "trading_bot")

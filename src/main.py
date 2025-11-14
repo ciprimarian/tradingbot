@@ -8,12 +8,13 @@ from src.strategies.momentum_strategy import MovingAverageCrossover
 from src.risk_management.portfolio_manager import PortfolioManager
 from src.config.settings import CONFIG
 # ---BOT Configuration---
-SYMBOL = 'TSLA'
-TIMEFRAME = "1Day"
-FAST_SMA = 5
-SLOW_SMA = 20
-TRADE_QUANTITY = 1
-
+SYMBOL = CONFIG["trading"]["symbol"]
+TIMEFRAME = CONFIG["data"]["timeframe"]
+START_DATE = CONFIG["data"]["start_date"]
+LIMIT = CONFIG["data"]["limit"]
+FAST_SMA = CONFIG['backtest']['strategy_params']['fast_period']
+SLOW_SMA = CONFIG['backtest']['strategy_params']['slow_period']
+TRADE_QUANTITY = CONFIG["trading"]["trade_quantity"]
 def main_bot_loop():
    
     print("Starting Live Trading Bot")

@@ -24,7 +24,7 @@ else:
 if not ALPACA_API_KEY or not ALPACA_SECRET_KEY:
     raise ValueError("ALPACA_API_KEY and ALPACA_SECRET_KEY must be set in the .env file.")
 
-def load_config(config_path='config.yaml'):
+def load_config(config_path='config/trading_config.yaml'):
     """
     Loads the main YAML cofiguration file.
     """

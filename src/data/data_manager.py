@@ -5,9 +5,11 @@ from typing import Optional
 
 import pandas as pd
 
-from src.config.settings import load_config, PROJECT_ROOT
+from src.config.settings import load_config, CONFIG
 from src.data.market_data import MarketData
 from src.utils.logger import get_Logger
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 class DataManager:
     """
@@ -111,5 +113,5 @@ class DataManager:
 
     def _build_path(self, name: str, fmt: str) -> Path:
         safe_name = name.replace(" ", "_").lower()
-        return self.storage_dir / f"{safe_name}.{fmt}"
+        return self.storage_path / f"{safe_name}.{fmt}"
 

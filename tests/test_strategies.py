@@ -19,8 +19,8 @@ def test_data_fetch_and_strategy():
 
     #Calculate 20 days SMA
     print("\nCalculate SMA")
-    data_with_slow_sma=moving_average.calculate_sma(historical_data, 20)
-    data_with_both_smas = moving_average.calculate_sma(data_with_slow_sma, 5)
+    data_with_fast_sma = moving_average.calculate_sma(historical_data, 5)
+    data_with_both_smas = moving_average.calculate_sma(data_with_fast_sma, 20)
 
     #Display SMA
     print("\nData woth 20-day SMA")
