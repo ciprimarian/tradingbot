@@ -32,8 +32,8 @@ class TechnicalAnalysisAgent(BaseAgent):
 
         #Analyze RSI if available
         if 'rsi_14' in data.columns:
-            rsi_signal, rsi_conf, rsi_reason = self.analyze_rsi(latest['rsi_14'])
-            signals.append(rsi_signal, rsi_conf)
+            rsi_signal, rsi_conf, rsi_reason = self._analyze_rsianalyze_rsi(latest['rsi_14'])
+            signals.append((rsi_signal, rsi_conf))
             reasoning_parts.append(rsi_reason)
 
         #MA analysis
@@ -43,7 +43,7 @@ class TechnicalAnalysisAgent(BaseAgent):
                 sma_20=latest['sma_20'],
                 sma_50=latest['sma_50'],
             )
-            signals.append(ma_signal, ma_conf)
+            signals.append((ma_signal, ma_conf))
             reasoning_parts.append(ma_reason)
 
         #Aggregate signals
