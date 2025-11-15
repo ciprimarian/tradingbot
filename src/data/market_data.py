@@ -6,7 +6,7 @@ import requests
 import pandas as pd
 
 from src.config import settings
-from src.utils.logger import get_Logger
+from src.utils.logger import get_logger
 
 class MarketData:
     def __init__(self):
@@ -15,7 +15,7 @@ class MarketData:
             'APCA-API-KEY-ID': settings.ALPACA_API_KEY,
             'APCA-API-SECRET-KEY': settings.ALPACA_SECRET_KEY
         }
-        self.logger = get_Logger(__name__)
+        self.logger = get_logger(__name__)
         self.logger.info("Market Data handler initialized | base_url: %s", self.base_url)
 
     def get_historical_bars(self, symbol: str, timeframe: str, start: str, end: Optional[str] = None, limit: int = 100) -> Optional[pd.DataFrame]:
@@ -53,8 +53,8 @@ class MarketData:
             
             print("Succesfully fetched and processed data")
             return df
-        except requests.exceptions.HTTPError as err:
-            self.logger.error("Response Body: %s", err, err.response.text)
+        except requests.HTTPError as err:
+            self.logger.error("Response Body: %s | %s", err, err.response.text)
             return None
         except Exception as exc:
             self.logger.exception("An unexpected error occurred fetching bars: %s", exc)

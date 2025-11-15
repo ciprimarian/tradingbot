@@ -1,9 +1,8 @@
 # src/indicators/moving_average.py
 
-from typing import Optional, Union
+from typing import Union
 
 import pandas as pd
-from sympy import series
 
 def calculate_sma(
     data: Union[pd.DataFrame, pd.Series],
@@ -14,16 +13,25 @@ def calculate_sma(
     if not isinstance(period, int) or period <= 0:
         raise ValueError("Period must be a positive integer.")
     
-    if column not in data.columns:
-        raise ValueError(f"Input DataFrame must have a '{column}' column")
-    if not isinstance(data, pd.Series):
-        result = data.rolling(window=period).mean()
-        result.name = result.name or f"sma_{period}"
-        return result
-    sma_column_name = f'sma_{period}'
-    data[sma_column_name] = data[column].rolling(window=period).mean()
-    if inplace:
-        data[sma_column_name] = series
+    if isinstance(data, pd.Series):
+        series =data
+    else:
+        if column not in data.columns:
+            raise ValueError(f"Input DataFrame must have a '{column}' column")
+        series = data[column]
+        if isinstance(series, pd.DataFrame):
+            if series.shape[1] != 1:
+                raise ValueError(f"Column '{column}' is ambiguous; got {series.shape[1]} columns.")
+            series = series.iloc[:, 0]
+
+    sma_name = f'sma_{period}'
+    sma = series.rolling(window=period, min_periods=1).mean()
+
+    if not inplace:
+        return sma
+
+    if isinstance(data, pd.DataFrame):
+        data[sma_name] = sma
         return data
-    series.name = sma_column_name
-    return series
+
+    return sma
