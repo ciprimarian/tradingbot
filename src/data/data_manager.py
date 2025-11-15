@@ -7,7 +7,7 @@ import pandas as pd
 
 from src.config.settings import load_config, CONFIG
 from src.data.market_data import MarketData
-from src.utils.logger import get_Logger
+from src.utils.logger import get_logger
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -22,7 +22,7 @@ class DataManager:
         storage_path: Optional[Path] = None
     ) -> None:
         self.config = config or load_config()
-        self.logger = get_Logger(__name__)
+        self.logger = get_logger(__name__)
         base_path = storage_path or Path(
             self.config.get("storage", {}).get("base_path", PROJECT_ROOT / "data" / "processed")
         )
@@ -74,10 +74,11 @@ class DataManager:
         numeric_cols = df.select_dtypes(include="number").columns
         if len(numeric_cols) > 0:
             z_scores = ((df[numeric_cols] - df[numeric_cols].mean()) / df[numeric_cols].std(ddof=0)).abs()
-            median_vals = df[numeric_cols].median()
-            df.loc[:, numeric_cols] = df[numeric_cols].where(
-                z_scores <= outlier_std_threshold, median_vals
-            )
+            for col in numeric_cols:
+                median_val = df[col].median()
+                mask = z_scores[col] > outlier_std_threshold
+                if mask.any():
+                    df.loc[mask, col] = median_val
         return df
 
     def save_data(self, df: pd.DataFrame, name: str, fmt: Optional[str] = None) -> Path:
