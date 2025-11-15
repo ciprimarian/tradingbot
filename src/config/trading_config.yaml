@@ -10,7 +10,7 @@ data:
 
 storage:
   base_path: "data/processed"
-  format;"parquet"
+  format: "parquet"
 
 backtest:
   initial_capital: 10000
