@@ -17,6 +17,13 @@ class BacktestResult:
         ax = self.equity_curve.plot(title="Equity Curve", figsize=(10, 6))
         ax.set_xlabel("Date")
 
+    @property
+    def metrics(self) -> Dict[str, float]:
+        """Dynamically return summary metrics as a dictionary."""
+        return{
+            k: v for k, v in self.__dict__.items()
+            if not isinstance(v, (pd.Series, pd.DataFrame, dict))
+        }
 
 class Backtester:
     def __init__(self, data: pd.DataFrame, config: Optional[dict] = None) -> None:
@@ -36,7 +43,7 @@ class Backtester:
         strategy_name: Optional[str] = None,
         strategy_params: Optional[dict] = None,
     ) ->BacktestResult:
-        strategy_instance = strategy or self._initialize_strategy(strategy_name, strategy_params)
+        strategy_instance = strategy or self._build_strategy(strategy_name, strategy_params)
         self.logger.info("Starting backtest with strategy: %s", strategy_instance.__class__.__name__)
         df = strategy_instance.generate_signals(self.data.copy())
 
