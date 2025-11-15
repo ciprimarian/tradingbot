@@ -2,11 +2,13 @@
 
 import os
 import yaml
+from pathlib import Path
 from dotenv import load_dotenv
 
 #This line finds and loads the .env file in the project's root directory
 load_dotenv()
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 #ALPACA API SETTINGS
 # Load API key and secret from environment variables
 ALPACA_API_KEY = os.getenv('ALPACA_API_KEY')
@@ -24,7 +26,7 @@ else:
 if not ALPACA_API_KEY or not ALPACA_SECRET_KEY:
     raise ValueError("ALPACA_API_KEY and ALPACA_SECRET_KEY must be set in the .env file.")
 
-def load_config(config_path='config/trading_config.yaml'):
+def load_config(config_path= PROJECT_ROOT /'src' / 'config' / 'trading_config.yaml'):
     """
     Loads the main YAML cofiguration file.
     """
