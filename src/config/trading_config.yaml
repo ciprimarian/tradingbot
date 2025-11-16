@@ -1,6 +1,7 @@
 trading:
   symbol: "NVDA"
   base_currency: "USD"
+  trade_quantity: 1
 
 data:
   provider: "alpaca"
