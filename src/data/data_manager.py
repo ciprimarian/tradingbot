@@ -7,6 +7,8 @@ import pandas as pd
 
 from src.config.settings import load_config, CONFIG
 from src.data.market_data import MarketData
+from src.indicators.moving_average import calculate_sma
+from src.indicators.momentum_indicators import calculate_rsi
 from src.utils.logger import get_logger
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -115,4 +117,31 @@ class DataManager:
     def _build_path(self, name: str, fmt: str) -> Path:
         safe_name = name.replace(" ", "_").lower()
         return self.storage_path / f"{safe_name}.{fmt}"
+
+    def prepare_for_agents(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Add all technical indicators required by the agent system.
+        
+        Args:
+            df: DataFrame with OHLCV data
+            
+        Returns:
+            DataFrame enriched with indicators (SMA_20, SMA_50, RSI_14)
+        """
+        if df.empty:
+            self.logger.warning("Cannot prepare indicators for empty DataFrame")
+            return df
+        
+        self.logger.info("Adding technical indicators for agent analysis")
+        
+        # Add Simple Moving Averages
+        df = calculate_sma(df, 20, column='close', inplace=True)
+        df = calculate_sma(df, 50, column='close', inplace=True)
+        
+        # Add RSI
+        df['rsi_14'] = calculate_rsi(df, window=14, column='close')
+        
+        self.logger.info("Indicators added: sma_20, sma_50, rsi_14")
+        return df
+
 
