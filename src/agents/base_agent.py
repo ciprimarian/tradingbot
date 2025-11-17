@@ -31,6 +31,16 @@ class AgentSignal:
         """Returns the weighted signal value based on confidence."""
         return self.signal_type.value * self.confidence
     
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert signal to dictionary format"""
+        return {
+            "signal_type": self.signal_type.name,
+            "signal_value": self.signal_type.value,
+            "confidence": self.confidence,
+            "reasoning": self.reasoning,
+            "metadata": self.metadata
+        }
+    
 
 class BaseAgent:
     '''Base class for trading agents.'''

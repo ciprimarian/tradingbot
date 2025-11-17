@@ -32,7 +32,7 @@ class TechnicalAnalysisAgent(BaseAgent):
 
         #Analyze RSI if available
         if 'rsi_14' in data.columns:
-            rsi_signal, rsi_conf, rsi_reason = self._analyze_rsianalyze_rsi(latest['rsi_14'])
+            rsi_signal, rsi_conf, rsi_reason = self._analyze_rsi(latest['rsi_14'])
             signals.append((rsi_signal, rsi_conf))
             reasoning_parts.append(rsi_reason)
 
@@ -59,18 +59,16 @@ class TechnicalAnalysisAgent(BaseAgent):
         avg_signal = signal_value / len(signals) if signals else 0.0
         avg_confidence = confidence / len(signals) if signals else 0.0
 
-        signal_type = self._value_to_signal_type(avg_signal)
-
         reasoning = "; ".join(reasoning_parts)
 
-        #Convert to SignalType
-        if signal_value > 1.5:
+        # Convert to SignalType
+        if avg_signal >= 1.5:
             signal_type = SignalType.STRONG_BUY
-        elif signal_value > 0.5:
+        elif avg_signal >= 0.5:
             signal_type = SignalType.BUY
-        elif signal_value < -1.5:
+        elif avg_signal <= -1.5:
             signal_type = SignalType.STRONG_SELL
-        elif signal_value < -0.5:
+        elif avg_signal <= -0.5:
             signal_type = SignalType.SELL
         else:
             signal_type = SignalType.HOLD

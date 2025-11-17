@@ -97,8 +97,13 @@ class SimpleSentimentAgent(BaseAgent):
                 else:
                     sentiment_scores.append((0.0, score * 0.5)) # neutral
 
-            average_sentiment = np.mean(sentiment_scores)
-            confidence = abs(average_sentiment) 
+            if not sentiment_scores:
+                return 0.0, 0.0, "Text: No results"
+
+            # Extract signal values and confidence separately
+            average_sentiment = np.mean([s for s, c in sentiment_scores])
+            avg_confidence = np.mean([c for s, c in sentiment_scores])
+            
             signal_value = average_sentiment * 2
 
             if average_sentiment > 0.3:
@@ -108,7 +113,7 @@ class SimpleSentimentAgent(BaseAgent):
             else:
                 desc = "Neutral"
             
-            return(signal_value, confidence, f"Text Sentiment: {desc} sentiment ({average_sentiment:.2f}, {len(texts)} items)")
+            return(signal_value, avg_confidence, f"Text Sentiment: {desc} sentiment ({average_sentiment:.2f}, {len(texts)} items)")
         
         except Exception as e:
             self.logger.error(f"Error analyzing text sentiment: {e}")
