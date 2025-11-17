@@ -97,6 +97,10 @@ class RiskManagementAgent(BaseAgent):
     
     def _assess_volatility(self, vol: float) -> tuple[float, float, str]:
         '''Assess volatility risk'''
+
+        if pd.isna(vol):
+            return 0.0, 0.0, "Volatility: N/A"
+
         if vol > self.max_volatility * 1.5:
             return -1.5, 0.9, f"High volatility detected: {vol:.2%}"
         elif vol > self.max_volatility:
@@ -106,6 +110,13 @@ class RiskManagementAgent(BaseAgent):
         else:
             return 0.3, 0.6, f"Low volatility: {vol:.2%}"
         
+    def _calculate_drawdown(self, data: pd.DataFrame) -> float:
+        '''Calculate maximum drawdownfrom recent peak'''
+        prices = data['close'].tail(self.lookback_period)
+        running_max = prices.expanding().max()
+        drawdown = (prices - running_max) / running_max
+        return abs(drawdown.iloc[-1])
+
     def _assess_drawdown(self, dd: float) -> tuple[float, float, str]:
         '''Assess drawdown risk'''
         if dd > 0.15:
