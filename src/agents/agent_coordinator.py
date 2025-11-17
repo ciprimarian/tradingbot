@@ -69,7 +69,7 @@ class AgentCoordinator:
                 self.logger.error(f"Error getting signal from {agent.name}: {e}")
                 # Create a neutral signal with zero confidence on error
                 signals[agent.name] = AgentSignal(
-                    signal_type=SignalType.NEUTRAL,
+                    signal_type=SignalType.HOLD,
                     confidence=0.0,
                     reasoning=f"Error: {str(e)}"
                 )
@@ -109,7 +109,7 @@ class AgentCoordinator:
         
         if total_weight == 0:
             return AgentSignal(
-                signal_type=SignalType.NEUTRAL,
+                signal_type=SignalType.HOLD,
                 confidence=0.0,
                 reasoning="No valid agents contributed to decision"
             )
@@ -134,7 +134,7 @@ class AgentCoordinator:
         
         if total_weight == 0:
             return AgentSignal(
-                signal_type=SignalType.NEUTRAL,
+                signal_type=SignalType.HOLD,
                 confidence=0.0,
                 reasoning="No confident signals from agents"
             )
@@ -151,7 +151,7 @@ class AgentCoordinator:
         votes = {
             SignalType.STRONG_BUY: 0,
             SignalType.BUY: 0,
-            SignalType.NEUTRAL: 0,
+            SignalType.HOLD: 0,
             SignalType.SELL: 0,
             SignalType.STRONG_SELL: 0
         }
@@ -200,7 +200,7 @@ class AgentCoordinator:
         else:
             # No agreement - return neutral with low confidence
             return AgentSignal(
-                signal_type=SignalType.NEUTRAL,
+                signal_type=SignalType.HOLD,
                 confidence=0.3,
                 reasoning=f"No consensus: {len(unique_signals)} different signals from agents"
             )
@@ -222,7 +222,7 @@ class AgentCoordinator:
         elif avg_signal <= -0.5:
             signal_type = SignalType.SELL
         else:
-            signal_type = SignalType.NEUTRAL
+            signal_type = SignalType.HOLD
         
         # Build reasoning
         agent_summaries = []
