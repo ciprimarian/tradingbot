@@ -1,12 +1,11 @@
 # src/agents/agent_coordinator.py
 
-from typing import List, Dict, Any, Optional
 from enum import Enum
-import pandas as pd
-import numpy as np
 
-from src.agents.base_agent import BaseAgent, AgentSignal, SignalType
-from src.utils.logger import get_logger
+from src.agents.common import (
+    pd, np, Dict, List, Optional, Any, get_logger,
+    BaseAgent, AgentSignal, SignalType
+)
 
 
 class AggregationMethod(Enum):

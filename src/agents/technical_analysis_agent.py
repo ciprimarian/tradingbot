@@ -1,10 +1,9 @@
 # src/agents/technical_analysis_agent.py
 
-from typing import Dict, Optional
-import pandas as pd
-import numpy as np
-
-from src.agents.base_agent import BaseAgent, AgentSignal, SignalType
+from src.agents.common import (
+    pd, np, Dict, Optional,
+    BaseAgent, AgentSignal, SignalType
+)
 
 class TechnicalAnalysisAgent(BaseAgent):
     '''Agent that uses technical indicators to generate trading signals.'''

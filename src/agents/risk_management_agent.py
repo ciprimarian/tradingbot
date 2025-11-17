@@ -1,12 +1,9 @@
 # src/agents/risk_management_agent.py
 
-import pandas as pd
-import numpy as np
-
-from typing import Any, Dict, Optional
-
-from src.agents.base_agent import BaseAgent, AgentSignal, SignalType
-from src.utils.logger import get_logger
+from src.agents.common import (
+    pd, np, Dict, Optional, Any, get_logger,
+    BaseAgent, AgentSignal, SignalType
+)
 
 class RiskManagementAgent(BaseAgent):
     '''Agent that analyzes risk metrics to provide trading signals.
