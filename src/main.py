@@ -28,6 +28,32 @@ TRADE_QUANTITY = CONFIG["trading"]["trade_quantity"]
 CHECK_INTERVAL = 60  # Check market status every 60 seconds
 MARKET_CLOSED_CHECK_INTERVAL = 300  # Check every 5 minutes when market is closed
 
+# Asset types that trade 24/7 (crypto and forex)
+ALWAYS_OPEN_ASSETS = ['BTC', 'ETH', 'LTC', 'BCH', 'DOGE', 'SHIB', 'USDT', 'USDC',
+                      'BTCUSD', 'ETHUSD', 'EURUSD', 'GBPUSD', 'USDJPY']
+
+# Commodities with extended/24-hour trading (e.g., on Alpaca they may trade nearly 24/5)
+# Gold, Silver, and some other commodities on certain platforms
+EXTENDED_HOURS_ASSETS = ['GLD', 'SLV', 'GC', 'SI', 'XAU', 'XAG']  # Gold and Silver ETFs/futures
+
+
+def is_crypto_or_24_7_asset(symbol):
+    """Check if the symbol is a 24/7 trading asset (crypto or forex)"""
+    symbol_upper = symbol.upper()
+    # Check if it's in the known 24/7 assets list
+    if symbol_upper in ALWAYS_OPEN_ASSETS:
+        return True
+    # Check if it contains common crypto/forex patterns
+    if 'USD' in symbol_upper and len(symbol_upper) <= 6:  # e.g., BTCUSD, EURUSD
+        return True
+    return False
+
+
+def is_extended_hours_asset(symbol):
+    """Check if the symbol has extended trading hours (near 24/5 for commodities)"""
+    symbol_upper = symbol.upper()
+    return symbol_upper in EXTENDED_HOURS_ASSETS
+
 
 def main_bot_loop():
     """Main trading bot loop using multi-agent system"""
@@ -68,35 +94,62 @@ def main_bot_loop():
 
     logger.info("All components initialized successfully")
     logger.info("Entering main trading loop...")
-    logger.info(f"Market check interval: {CHECK_INTERVAL}s (open) / {MARKET_CLOSED_CHECK_INTERVAL}s (closed)")
+    
+    # Check asset trading hours type
+    is_24_7 = is_crypto_or_24_7_asset(SYMBOL)
+    is_extended = is_extended_hours_asset(SYMBOL)
+    
+    if is_24_7:
+        logger.info(f"🌐 Asset {SYMBOL} trades 24/7 (Crypto/Forex) - Market hours check DISABLED")
+        logger.info(f"Check interval: {CHECK_INTERVAL}s")
+    elif is_extended:
+        logger.info(f"⏰ Asset {SYMBOL} has extended hours (Commodity) - Trading nearly 24/5")
+        logger.info(f"Note: May have brief closures on weekends")
+        logger.info(f"Check interval: {CHECK_INTERVAL}s")
+    else:
+        logger.info(f"📊 Asset {SYMBOL} follows standard market hours - Market hours check ENABLED")
+        logger.info(f"Market check interval: {CHECK_INTERVAL}s (open) / {MARKET_CLOSED_CHECK_INTERVAL}s (closed)")
 
     last_trade_check_time = None  # Track when we last checked for trades
     
     while True:
         try:  
-            # Check if market is open
-            clock = broker.get_market_clock()
-            if not clock:
-                logger.warning("Failed to get market clock. Retrying in 60 seconds...")
-                time.sleep(60)
-                continue
-            
-            is_open = clock.get('is_open', False)
-            next_open = clock.get('next_open')
-            next_close = clock.get('next_close')
-            
-            if not is_open:
-                logger.info(f"🔴 Market is CLOSED. Next open: {next_open}")
-                logger.info(f"Waiting {MARKET_CLOSED_CHECK_INTERVAL} seconds before next check...")
-                time.sleep(MARKET_CLOSED_CHECK_INTERVAL)
-                continue
-            
-            # Market is open - log status
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            logger.info("=" * 60)
-            logger.info(f"🟢 Market is OPEN | Current time: {current_time}")
-            logger.info(f"Market closes at: {next_close}")
-            logger.info("=" * 60)
+            # Check if market is open (skip for 24/7 and extended hours assets)
+            if not is_24_7 and not is_extended:
+                clock = broker.get_market_clock()
+                if not clock:
+                    logger.warning("Failed to get market clock. Retrying in 60 seconds...")
+                    time.sleep(60)
+                    continue
+                
+                is_open = clock.get('is_open', False)
+                next_open = clock.get('next_open')
+                next_close = clock.get('next_close')
+                
+                if not is_open:
+                    logger.info(f"🔴 Market is CLOSED. Next open: {next_open}")
+                    logger.info(f"Waiting {MARKET_CLOSED_CHECK_INTERVAL} seconds before next check...")
+                    time.sleep(MARKET_CLOSED_CHECK_INTERVAL)
+                    continue
+                
+                # Market is open - log status
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logger.info("=" * 60)
+                logger.info(f"🟢 Market is OPEN | Current time: {current_time}")
+                logger.info(f"Market closes at: {next_close}")
+                logger.info("=" * 60)
+            elif is_24_7:
+                # For 24/7 crypto/forex assets
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logger.info("=" * 60)
+                logger.info(f"🌐 24/7 Trading Active (Crypto/Forex) | Current time: {current_time}")
+                logger.info("=" * 60)
+            else:
+                # For extended hours commodities
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logger.info("=" * 60)
+                logger.info(f"⏰ Extended Hours Trading Active (Commodity) | Current time: {current_time}")
+                logger.info("=" * 60)
             
             # 1. Update portfolio state
             logger.info("Updating portfolio state...")

@@ -1,5 +1,5 @@
 trading:
-  symbol: "NVDA"
+  symbol: "GLD"  # Gold ETF - tradeable on Alpaca
   base_currency: "USD"
   trade_quantity: 1
 
