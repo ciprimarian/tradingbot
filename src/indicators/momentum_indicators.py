@@ -22,4 +22,4 @@ def calculate_rsi(
     rs = gain_series / loss_series.replace(0, np.nan)
     rsi = 100 - (100 / (1 + rs))
     rsi.name = f'rsi_{window}'
-    return rsi.fillna(method='bfill')
+    return rsi.bfill()
