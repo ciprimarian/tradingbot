@@ -41,6 +41,38 @@ class AlpacaBroker:
         except Exception as e:
             self.logger.error(f"Unexpected error fetching account info: {e}", exc_info=True)
             return None
+    
+    def get_market_clock(self):
+        """Get market clock information (open status, next open/close times)"""
+        try:
+            self.logger.debug("Fetching market clock...")
+            response = requests.get(f"{self.base_url}/v2/clock", headers=self.headers)
+            response.raise_for_status()
+            
+            clock = response.json()
+            is_open = clock.get('is_open', False)
+            next_open = clock.get('next_open')
+            next_close = clock.get('next_close')
+            
+            self.logger.debug(
+                f"Market clock | is_open={is_open}, next_open={next_open}, next_close={next_close}"
+            )
+            return clock
+            
+        except requests.exceptions.HTTPError as err:
+            self.logger.error(f"HTTP Error fetching market clock: {err}")
+            return None
+            
+        except Exception as e:
+            self.logger.error(f"Unexpected error fetching market clock: {e}", exc_info=True)
+            return None
+    
+    def is_market_open(self):
+        """Check if the market is currently open for trading"""
+        clock = self.get_market_clock()
+        if clock:
+            return clock.get('is_open', False)
+        return False
         
     def submit_order(self, symbol: str, qty: int, side: str):
         """Submit a market order to Alpaca"""
