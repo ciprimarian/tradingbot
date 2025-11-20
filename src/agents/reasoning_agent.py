@@ -85,6 +85,9 @@ class ReasoningAgent(BaseAgent):
     def __init__(self, name: str = "ReasoningAgent", weight: float = 1.0, config: Optional[Dict] = None):
         super().__init__(name, weight, config)
         
+        # Initialize logger
+        self.logger = get_logger(self.__class__.__name__)
+        
         self.kb = KnowledgeBase()
         self._initialize_rules()
         

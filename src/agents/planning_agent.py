@@ -55,6 +55,9 @@ class TradingPlannerAgent(BaseAgent):
     def __init__(self, name: str = "PlannerAgent", weight: float = 1.0, config: Optional[Dict] = None):
         super().__init__(name, weight, config)
         
+        # Initialize logger
+        self.logger = get_logger(self.__class__.__name__)
+        
         # Planning parameters
         self.lookahead = self.config.get("lookahead", 5)  # how far to plan ahead
         self.transaction_cost = self.config.get("transaction_cost", 0.001)  # 0.1%
