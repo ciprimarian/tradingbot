@@ -89,6 +89,10 @@ nav:
   - Reference:
       - Setup Guide: setup.md
       - Original Architecture: architecture.md
+      - Detailed Architecture: system_architecture.md
+      - Trading Strategies: trading_strategies.md
       - Development: development.md
+      - Troubleshooting: troubleshooting.md
+      - Deployment: deployment.md
 
 copyright: Copyright &copy; 2024-2025 Cipri Marian
