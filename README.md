@@ -247,15 +247,6 @@ The main branch has:
 
 But it all started here, with simple data analysis and a basic MA crossover.
 
-## Why This Matters
-
-This branch documents the learning process. It shows:
-- How to build a trading system from scratch
-- The importance of data analysis before strategy development
-- How backtesting reveals strategy weaknesses
-- The progression from simple to complex
-
-Every complex system starts simple. This is that start.
 
 ## Documentation
 
