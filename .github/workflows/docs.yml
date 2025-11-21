@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
       - data
     paths:
       - 'docs/**'
@@ -59,10 +58,8 @@ jobs:
           
           if [ "$BRANCH_NAME" = "main" ]; then
             echo "dir=." >> $GITHUB_OUTPUT
-            echo "alias=latest" >> $GITHUB_OUTPUT
           else
             echo "dir=$BRANCH_NAME" >> $GITHUB_OUTPUT
-            echo "alias=$BRANCH_NAME" >> $GITHUB_OUTPUT
           fi
 
       - name: Build documentation
@@ -76,55 +73,19 @@ jobs:
           
           mkdocs build --clean --strict
 
-      - name: Create version file
-        run: |
-          mkdir -p site/.versions
-          cat > site/.versions/versions.json << EOF
-          [
-            {"version": "main", "title": "Main (Stable)", "aliases": ["latest"]},
-            {"version": "dev", "title": "Development", "aliases": []},
-            {"version": "data", "title": "Data Branch", "aliases": []}
-          ]
-          EOF
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
           destination_dir: ${{ steps.deployment.outputs.dir }}
-          keep_files: true  # Keep other branch deployments
+          keep_files: true
           enable_jekyll: false
           cname: false
-
-      - name: Create version switcher
-        if: github.ref == 'refs/heads/main'
-        run: |
-          # Create a simple version switcher HTML
-          cat > version-switcher.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <title>Version Selector</title>
-          </head>
-          <body>
-            <h2>Select Documentation Version:</h2>
-            <ul>
-              <li><a href="/">Main (Stable)</a></li>
-              <li><a href="/dev/">Development</a></li>
-              <li><a href="/data/">Data Branch</a></li>
-            </ul>
-          </body>
-          </html>
-          EOF
 
       - name: Summary
         run: |
           echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch**: ${{ steps.deployment.outputs.branch }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Deployment Directory**: \`${{ steps.deployment.outputs.dir }}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ steps.deployment.outputs.branch }}" = "main" ]; then
@@ -132,9 +93,3 @@ jobs:
           else
             echo "📖 **Live URL**: https://ciprimarian.github.io/tradingbot/${{ steps.deployment.outputs.branch }}/" >> $GITHUB_STEP_SUMMARY
           fi
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Available Versions:" >> $GITHUB_STEP_SUMMARY
-          echo "- Main: https://ciprimarian.github.io/tradingbot/" >> $GITHUB_STEP_SUMMARY
-          echo "- Dev: https://ciprimarian.github.io/tradingbot/dev/" >> $GITHUB_STEP_SUMMARY
-          echo "- Data: https://ciprimarian.github.io/tradingbot/data/" >> $GITHUB_STEP_SUMMARY
