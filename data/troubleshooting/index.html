@@ -15,6 +15,10 @@
         <link rel="canonical" href="https://ciprimarian.github.io/tradingbot/data/troubleshooting/">
       
       
+        <link rel="prev" href="../development/">
+      
+      
+        <link rel="next" href="../deployment/">
       
       
         
@@ -266,10 +270,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../setup/" class="md-tabs__link">
           
   
@@ -475,28 +481,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -514,7 +523,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -588,6 +597,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../system_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detailed Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../trading_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trading Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../development/" class="md-nav__link">
         
   
@@ -596,6 +661,476 @@
     
   
     Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard-troubleshooting-removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard Troubleshooting (Removed)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ta-lib-installation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TA-Lib Installation Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-and-connection-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API and Connection Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API and Connection Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-alpaca_api_key-and-alpaca_secret_key-must-be-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error: ALPACA_API_KEY and ALPACA_SECRET_KEY must be set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-401-unauthorized-or-invalid-api-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error: 401 Unauthorized or Invalid API credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-data-returned-for-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error: No data returned for symbol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-market-is-closed-and-bot-just-waits-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error: Market is CLOSED and bot just waits forever
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runtime Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bot-keeps-buying-and-selling-the-same-stock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bot keeps buying and selling the same stock
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ml-agent-always-returns-hold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ML Agent always returns HOLD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning-agent-is-really-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planning Agent is really slow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-usage-keeps-growing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory usage keeps growing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#indicators-are-all-nan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicators are all NaN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backtest-results-look-too-good-to-be-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backtest results look too good to be true
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-logs-appearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No logs appearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-files-are-huge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log files are huge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Conflicts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Conflicts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conflicting-package-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conflicting package versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bot-is-too-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bot is too slow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bot-missed-a-good-trade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bot missed a good trade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing and Development
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing and Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tests-are-failing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests are failing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cant-reproduce-an-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can't reproduce an issue
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-debugging-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Debugging Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#still-stuck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Still Stuck?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
   
 
     
