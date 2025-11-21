@@ -27,11 +27,11 @@ Things that work:
 - Aggregates signals using configurable methods
 - Executes trades (on paper account)
 - Logs everything obsessively
-- Has a web dashboard for monitoring (when the import bug is fixed)
+~~Has a web dashboard for monitoring (when the import bug is fixed)~~
 - Includes backtesting framework
 
 Things that are rough:
-- Dashboard has a missing import that crashes it on startup
+~~Dashboard has a missing import that crashes it on startup~~
 - Some agents are more developed than others
 - The mean reversion strategy file is empty
 - No automated tests yet (I know, I know)
@@ -83,7 +83,7 @@ tradingbot/
 │   ├── strategies/    # Classic trading strategies
 │   ├── risk_management/  # Portfolio and risk tools
 │   ├── backtest/      # Backtesting engine
-│   ├── dashboard/     # Web UI (Flask + SocketIO)
+│   ├── ~~dashboard/     # Web UI (Flask + SocketIO)~~
 │   └── config/        # Configuration files
 ├── tests/             # Unit tests (need to write more)
 ├── notebooks/         # Jupyter notebooks for research
@@ -153,17 +153,10 @@ This runs your strategy against historical data and tells you how it would've pe
 
 Results get saved to `data/backtest_results.csv`.
 
-## Web Dashboard
 
-There's a Flask web dashboard for monitoring:
+## Web Dashboard (Removed)
 
-```bash
-python -m src.dashboard.app
-```
-
-Then go to http://localhost:5000
-
-Note: Currently crashes with a `NameError: name 'List' is not defined`. Need to add `from typing import List, Dict` to the top of `bot_manager.py`. I mentioned this in the docs. I'll fix it eventually.
+The web dashboard has been removed from this repository and is no longer available or supported. All dashboard-related code and instructions have been deleted. Please ignore any references to the dashboard in older documentation or comments.
 
 ## Agent Weights and Tuning
 
@@ -204,7 +197,7 @@ pytest --cov=src --cov-report=html
 
 Things I'm aware of and will fix when I get around to it:
 
-1. Dashboard crashes on startup (missing typing imports)
+~~1. Dashboard crashes on startup (missing typing imports)~~
 2. Mean reversion strategy is not implemented
 3. Reasoning agent logic is incomplete
 4. No proper error handling in some API calls
@@ -245,7 +238,7 @@ Main libraries used:
 - `scikit-learn` - Machine learning
 - `ta-lib` - Technical indicators
 - `alpaca-py` - Broker API (through requests)
-- `flask` & `flask-socketio` - Web dashboard
+~~- `flask` & `flask-socketio` - Web dashboard~~
 - `pytorch` & `tensorflow` - ML frameworks (for future agents)
 - `transformers` - NLP for sentiment analysis
 
