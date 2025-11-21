@@ -120,7 +120,7 @@ tradingbot/ (data branch)
 
 ```bash
 # Clone and checkout this branch
-git clone <repo-url>
+git clone https://github.com/ciprimarian/tradingbot.git
 cd tradingbot
 git checkout data
 
