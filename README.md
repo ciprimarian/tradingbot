@@ -96,11 +96,17 @@ tradingbot/
 
 I wrote actual documentation that's meant to be read by humans:
 
+**Online:** https://ciprimarian.github.io/tradingbot/
+
+Or read locally:
+
 - **[Setup Guide](docs/setup.md)** - How to get this running on your machine
 - **[Architecture](docs/architecture.md)** - How the system is structured and why
 - **[Trading Strategies](docs/trading_strategies.md)** - Explanation of each agent's logic
 
 Read these. They're not the usual corporate documentation BS. They're written like I'm explaining this to myself six months from now when I've forgotten everything.
+
+The online docs are also available for dev and data branches if you want to see what's different.
 
 ## How It Works (Quick Version)
 
