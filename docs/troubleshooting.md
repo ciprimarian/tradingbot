@@ -2,25 +2,10 @@
 
 So things broke. Welcome to software development. Here's a collection of issues I've hit and how to fix them. Hopefully this saves you some time.
 
-## Dashboard Won't Start
 
-### Error: `NameError: name 'List' is not defined`
+## Dashboard Troubleshooting (Removed)
 
-Yeah, I know about this one. It's in `src/dashboard/bot_manager.py`.
-
-**The problem:** Missing typing imports at the top of the file.
-
-**The fix:**
-
-Open `src/dashboard/bot_manager.py` and add these imports at the very top:
-
-```python
-from typing import List, Dict, Optional, Any
-```
-
-Should be right after the other imports. Then the dashboard will start fine.
-
-**Why it happened:** I was being lazy and didn't import the typing hints properly. Type hints are nice for documentation but Python needs the imports to actually use them.
+The dashboard and all related code have been removed from this repository. Please ignore any references to it in older documentation or comments.
 
 ## Installation Issues
 

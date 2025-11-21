@@ -124,11 +124,10 @@ It initializes all the components: broker, data manager, portfolio, optimizer, a
 
 It handles keyboard interrupts gracefully and logs everything obsessively so you can figure out what went wrong later.
 
-### Dashboard (src/dashboard/)
 
-Web interface for monitoring the bot. Uses Flask and SocketIO for real-time updates. Shows current positions, portfolio value, recent trades, logs, and charts. You can start/stop the bot from the UI.
+### Dashboard (Removed)
 
-**BotManager** - Runs the trading bot in a background thread and communicates state back to the web app via WebSockets.
+The web dashboard and all related code have been removed from this repository. Please ignore any references to it in older documentation or comments.
 
 ## Data Flow
 
@@ -186,7 +185,7 @@ Let me be honest about the rough edges:
 
 - **No error recovery in the main loop.** If the broker API goes down mid-trade, the bot will retry but might get confused about position state. You should probably check manually.
 
-- **Dashboard has a circular import bug.** There's a `NameError: name 'List' is not defined` in `bot_manager.py`. Need to add `from typing import List` at the top. I keep forgetting to fix that.
+~~Dashboard has a circular import bug.~~
 
 ## How to Think About This
 

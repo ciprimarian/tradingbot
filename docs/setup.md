@@ -63,7 +63,7 @@ How to get Alpaca keys:
 1. Go to https://alpaca.markets/
 2. Sign up for a free account
 3. Use paper trading (fake money) to start
-4. Generate API keys from the dashboard
+4. Generate API keys from the Alpaca website
 5. Paste them into `.env`
 
 The `ALPACA_BASE_URL` is the paper trading endpoint. When you're ready for real money (scary), change it to `https://api.alpaca.markets`. But seriously, test thoroughly with paper trading first.
@@ -126,17 +126,10 @@ You'll see a ton of logs. The bot will:
 
 Press `Ctrl+C` to stop it gracefully.
 
-### Dashboard mode
 
-There's a web dashboard for monitoring the bot visually. To run it:
+### Dashboard (Removed)
 
-```bash
-python -m src.dashboard.app
-```
-
-Then open http://localhost:5000 in your browser. You can start/stop the bot, see current positions, view logs, etc.
-
-Note: The dashboard has a bug right now (missing `from typing import List` import in `bot_manager.py`). I keep meaning to fix it. If it crashes on startup, that's why.
+The web dashboard and all related code have been removed from this repository. Please ignore any references to it in older documentation or comments.
 
 ## Project Structure Quick Tour
 
@@ -153,7 +146,7 @@ tradingbot/
 │   ├── strategies/          # Trading strategies
 │   ├── risk_management/     # Portfolio management, position sizing
 │   ├── backtest/            # Backtesting engine
-│   ├── dashboard/           # Web UI
+│   ├── ~~dashboard/           # Web UI~~
 │   ├── config/              # Configuration files
 │   └── utils/               # Helper functions, logging
 ├── data/                    # Stored data (parquet/CSV files)
@@ -188,15 +181,10 @@ If you're testing and don't want to wait, either:
 
 Alpaca might not have data for that symbol, or your date range is off. Try a common symbol like `SPY` or `AAPL` and a recent date range.
 
-### Dashboard won't start (NameError: name 'List' is not defined)
 
-Yeah, I know. Open `src/dashboard/bot_manager.py` and add this at the top:
+### Dashboard Troubleshooting (Removed)
 
-```python
-from typing import List, Dict
-```
-
-I'll fix it eventually. Or you can make a PR.
+The dashboard is no longer part of this project. All related troubleshooting steps have been removed.
 
 ## Backtesting (Testing Without Real Money)
 
