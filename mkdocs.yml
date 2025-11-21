@@ -88,8 +88,11 @@ nav:
   - Architecture:
       - System Overview: architecture.md
       - Detailed Architecture: system_architecture.md
+      - Data Branch Architecture: data_branch_architecture.md
   - Trading:
       - Trading Strategies: trading_strategies.md
+  - Notebooks:
+      - Notebooks Guide: notebooks_guide.md
   - Development:
       - Development Guide: development.md
       - Troubleshooting: troubleshooting.md
