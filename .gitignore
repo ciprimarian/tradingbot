@@ -13,3 +13,5 @@ venv/
 
 data/
 logs/
+.coverage
+htmlcov/
