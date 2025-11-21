@@ -1,0 +1,98 @@
+site_name: Trading Bot Documentation
+site_description: Multi-agent AI trading system documentation
+site_author: Cipri Marian
+site_url: https://ciprimarian.github.io/tradingbot/
+
+repo_name: ciprimarian/tradingbot
+repo_url: https://github.com/ciprimarian/tradingbot
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  version:
+    provider: mike
+    default: main
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ciprimarian/tradingbot
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+plugins:
+  - search:
+      lang: en
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Setup Guide: setup.md
+  - Architecture:
+      - System Overview: architecture.md
+      - Detailed Architecture: system_architecture.md
+  - Trading:
+      - Trading Strategies: trading_strategies.md
+  - Development:
+      - Development Guide: development.md
+      - Troubleshooting: troubleshooting.md
+      - Deployment Guide: deployment.md
+
+copyright: Copyright &copy; 2024-2025 Cipri Marian
