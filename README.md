@@ -250,8 +250,15 @@ But it all started here, with simple data analysis and a basic MA crossover.
 
 ## Documentation
 
-For this branch specifically:
+**Online:**
+- Data (this branch): https://ciprimarian.github.io/tradingbot/data/
+- Main (stable): https://ciprimarian.github.io/tradingbot/
+- Dev (latest): https://ciprimarian.github.io/tradingbot/dev/
 
+Or check `docs/` in this repository:
+- `data_branch_architecture.md` - How this branch is structured
+- `notebooks_guide.md` - Using the research notebooks
+- Standard docs (setup, troubleshooting, etc.)
 - **Architecture Diagram** - See `docs/data_branch_architecture.md` for visual overview
 - **Notebook Guide** - See `docs/notebooks_guide.md` for how to use the research notebooks
 - **Setup** - Same as main branch, see `docs/setup.md`
