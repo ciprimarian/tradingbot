@@ -1,7 +1,7 @@
-site_name: Trading Bot Documentation
+site_name: Trading Bot - Data Branch
 site_description: Multi-agent AI trading system documentation
 site_author: Cipri Marian
-site_url: https://ciprimarian.github.io/tradingbot/
+site_url: https://ciprimarian.github.io/tradingbot/data/
 
 repo_name: ciprimarian/tradingbot
 repo_url: https://github.com/ciprimarian/tradingbot
@@ -83,19 +83,12 @@ plugins:
 
 nav:
   - Home: index.md
-  - Getting Started:
-      - Setup Guide: setup.md
-  - Architecture:
-      - System Overview: architecture.md
-      - Detailed Architecture: system_architecture.md
-      - Data Branch Architecture: data_branch_architecture.md
-  - Trading:
-      - Trading Strategies: trading_strategies.md
-  - Notebooks:
+  - Data Analysis:
+      - Architecture: data_branch_architecture.md
       - Notebooks Guide: notebooks_guide.md
-  - Development:
-      - Development Guide: development.md
-      - Troubleshooting: troubleshooting.md
-      - Deployment Guide: deployment.md
+  - Reference:
+      - Setup Guide: setup.md
+      - Original Architecture: architecture.md
+      - Development: development.md
 
 copyright: Copyright &copy; 2024-2025 Cipri Marian
