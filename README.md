@@ -106,9 +106,11 @@ Or read locally:
 
 Read these. They're not the usual corporate documentation BS. They're written like I'm explaining this to myself six months from now when I've forgotten everything.
 
-**Online documentation:** https://ciprimarian.github.io/tradingbot/
+**Online documentation:**
+- Main (stable): https://ciprimarian.github.io/tradingbot/
+- Data (notebooks): https://ciprimarian.github.io/tradingbot/data/
 
-To view dev or data branch docs, check them out locally and run `mkdocs serve`.
+To view dev branch docs, check them out locally and run `mkdocs serve`.
 
 
 ## How It Works (Quick Version)
