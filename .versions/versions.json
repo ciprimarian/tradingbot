@@ -1,5 +1,0 @@
-[
-  {"version": "main", "title": "Main (Stable)", "aliases": ["latest"]},
-  {"version": "dev", "title": "Development", "aliases": []},
-  {"version": "data", "title": "Data Branch", "aliases": []}
-]
