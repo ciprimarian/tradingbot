@@ -113,7 +113,7 @@ This should print out 10 rows of OHLCV data for GLD. If you get an API error, ch
 Just run the main script:
 
 ```bash
-python src/main.py
+python -m src.main
 ```
 
 You'll see a ton of logs. The bot will:
@@ -131,7 +131,7 @@ Press `Ctrl+C` to stop it gracefully.
 There's a web dashboard for monitoring the bot visually. To run it:
 
 ```bash
-python src/dashboard/app.py
+python -m src.dashboard.app
 ```
 
 Then open http://localhost:5000 in your browser. You can start/stop the bot, see current positions, view logs, etc.

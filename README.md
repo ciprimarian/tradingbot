@@ -58,7 +58,7 @@ cp .env.example .env
 # Edit .env with your Alpaca API keys
 
 # Run the bot
-python src/main.py
+python -m src.main
 ```
 
 For detailed setup instructions, see [docs/setup.md](docs/setup.md).
@@ -158,7 +158,7 @@ Results get saved to `data/backtest_results.csv`.
 There's a Flask web dashboard for monitoring:
 
 ```bash
-python src/dashboard/app.py
+python -m src.dashboard.app
 ```
 
 Then go to http://localhost:5000
