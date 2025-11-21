@@ -106,7 +106,11 @@ Or read locally:
 
 Read these. They're not the usual corporate documentation BS. They're written like I'm explaining this to myself six months from now when I've forgotten everything.
 
-The online docs are also available for dev and data branches if you want to see what's different.
+**Documentation versions:**
+- Main (stable): https://ciprimarian.github.io/tradingbot/
+- Dev (latest): https://ciprimarian.github.io/tradingbot/dev/
+- Data (notebooks): https://ciprimarian.github.io/tradingbot/data/
+
 
 ## How It Works (Quick Version)
 
