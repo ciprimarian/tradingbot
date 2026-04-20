@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timedelta, timezone
 
 from src.fuzzi.blotter import JsonlBlotter
+from src.fuzzi.brain import Brain, BrainContext, BrainReview, Council, CouncilRule, CouncilVerdict
 from src.fuzzi.common.models import Bar, PortfolioSnapshot, Signal
 from src.fuzzi.common.modes import RunMode
 from src.fuzzi.config import load_settings
@@ -21,6 +22,54 @@ class FixedSignalSource(SignalSource):
 
     def evaluate(self, symbol: str, bars: list[Bar]) -> Signal | None:
         return self.signal
+
+
+class OverrideBrain(Brain):
+    name = "override_brain"
+
+    def __init__(self, direction: str, approved: bool = True, reason: str = "brain greenlights") -> None:
+        self.direction = direction
+        self.approved = approved
+        self.reason = reason
+
+    def evaluate(self, context: BrainContext) -> BrainReview:
+        reviewed_signal = Signal(
+            symbol=context.signal.symbol,
+            direction=self.direction,
+            confidence=context.signal.confidence,
+            source=context.signal.source,
+            timestamp=context.signal.timestamp,
+            score=context.signal.score,
+            notes=context.signal.notes,
+            metadata=dict(context.signal.metadata),
+        )
+        reviewed_signal.metadata["brain_override"] = self.direction
+        return BrainReview(
+            approved=self.approved,
+            signal=reviewed_signal,
+            reason=self.reason,
+            source=self.name,
+            created_at=datetime.now(timezone.utc),
+            metadata={"override": self.direction},
+        )
+
+
+class DirectionBlockRule(CouncilRule):
+    name = "no_shorts"
+
+    def __init__(self, blocked_direction: str) -> None:
+        self.blocked_direction = blocked_direction
+
+    def review(self, context: BrainContext, review: BrainReview) -> CouncilVerdict | None:
+        if review.signal.direction == self.blocked_direction:
+            return CouncilVerdict(
+                approved=False,
+                reason=f"council blocks {self.blocked_direction}",
+                created_at=datetime.now(timezone.utc),
+                source=self.name,
+                metadata={"direction": self.blocked_direction},
+            )
+        return None
 
 
 def _bar_series(symbol: str, yesterday_close: float, today_open: float, today_close: float) -> list[Bar]:
@@ -143,3 +192,58 @@ def test_low_nerve_halves_position_sizing(tmp_path):
     payloads = [json.loads(line) for line in lines]
     order_payload = next(item for item in payloads if item["entry_type"] == "order_intent")
     assert order_payload["payload"]["quantity"] == 0.25
+
+
+def test_brain_can_override_signal_before_seatbelt(tmp_path):
+    settings = load_settings()
+    blotter = JsonlBlotter(tmp_path / "pit.jsonl")
+    runner = TradeRunner(settings=settings, blotter=blotter)
+    seatbelt = SimpleSeatbelt(settings)
+    pit = Pit(settings=settings, runner=runner, seatbelt=seatbelt, blotter=blotter)
+    pit.mount_brain(OverrideBrain(direction="buy"))
+    pit.register_source(FixedSignalSource(
+        Signal(
+            symbol="SPY",
+            direction="sell",
+            confidence=0.6,
+            source="fixed",
+            timestamp=datetime.now(timezone.utc),
+        )
+    ))
+
+    decisions = __import__("asyncio").run(pit.tick({"SPY": _bar_series("SPY", 100.0, 100.0, 100.0)}))
+
+    assert len(decisions) == 1
+    lines = (tmp_path / "pit.jsonl").read_text(encoding="utf-8").strip().splitlines()
+    payloads = [json.loads(line) for line in lines]
+    brain_payload = next(item for item in payloads if item["entry_type"] == "brain")
+    assert brain_payload["payload"]["direction"] == "buy"
+
+
+def test_council_can_veto_brain_approved_signal(tmp_path):
+    settings = load_settings()
+    blotter = JsonlBlotter(tmp_path / "pit.jsonl")
+    runner = TradeRunner(settings=settings, blotter=blotter)
+    seatbelt = SimpleSeatbelt(settings)
+    pit = Pit(settings=settings, runner=runner, seatbelt=seatbelt, blotter=blotter)
+    pit.mount_brain(OverrideBrain(direction="buy"))
+    council = Council()
+    council.register_rule(DirectionBlockRule(blocked_direction="buy"))
+    pit.seat_council(council)
+    pit.register_source(FixedSignalSource(
+        Signal(
+            symbol="SPY",
+            direction="buy",
+            confidence=0.6,
+            source="fixed",
+            timestamp=datetime.now(timezone.utc),
+        )
+    ))
+
+    decisions = __import__("asyncio").run(pit.tick({"SPY": _bar_series("SPY", 100.0, 100.0, 100.0)}))
+
+    assert decisions == []
+    assert pit.nerve == 0.45
+    lines = (tmp_path / "pit.jsonl").read_text(encoding="utf-8").strip().splitlines()
+    payloads = [json.loads(line) for line in lines]
+    assert any(item["entry_type"] == "council" for item in payloads)

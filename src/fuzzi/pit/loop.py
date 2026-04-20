@@ -4,6 +4,7 @@ import asyncio
 from datetime import datetime, timezone
 
 from src.fuzzi.blotter import BlotterEntry, BlotterEntryType, JsonlBlotter
+from src.fuzzi.brain import Brain, BrainContext, BrainReview, Council
 from src.fuzzi.common.models import Bar, PortfolioSnapshot
 from src.fuzzi.config import FuzziSettings
 from src.fuzzi.runner import RunnerDecision, TradeRunner
@@ -24,6 +25,8 @@ class Pit:
         self.seatbelt = seatbelt
         self.blotter = blotter
         self.signal_sources: list[SignalSource] = []
+        self.brain: Brain | None = None
+        self.council: Council | None = None
         self.nerve: float = 0.5
         self.portfolio = PortfolioSnapshot(
             timestamp=datetime.now(timezone.utc),
@@ -34,6 +37,12 @@ class Pit:
 
     def register_source(self, source: SignalSource) -> None:
         self.signal_sources.append(source)
+
+    def mount_brain(self, brain: Brain) -> None:
+        self.brain = brain
+
+    def seat_council(self, council: Council) -> None:
+        self.council = council
 
     async def tick(self, bars: dict[str, list[Bar]]) -> list[RunnerDecision]:
         decisions: list[RunnerDecision] = []
@@ -59,8 +68,33 @@ class Pit:
                 self.runner.record_signal(signal)
 
                 sizing_multiplier = 0.5 if self.nerve < 0.3 else 1.0
-                decision = self.seatbelt.review_signal(
+                reviewed_signal = signal
+                brain_context = BrainContext(
+                    symbol=symbol,
+                    bars=history,
                     signal=signal,
+                    nerve=self.nerve,
+                    portfolio=self.portfolio,
+                    sizing_multiplier=sizing_multiplier,
+                )
+                brain_review = self._run_brain(brain_context)
+                if brain_review is not None:
+                    reviewed_signal = brain_review.signal
+                    if not brain_review.approved:
+                        rejections += 1
+                        self._nudge_nerve(-0.05)
+                        self._log_note(source.name, symbol, brain_review.reason)
+                        continue
+
+                    council_verdict = self._run_council(brain_context, brain_review)
+                    if council_verdict is not None and not council_verdict.approved:
+                        rejections += 1
+                        self._nudge_nerve(-0.05)
+                        self._log_note(council_verdict.source, symbol, council_verdict.reason)
+                        continue
+
+                decision = self.seatbelt.review_signal(
+                    signal=reviewed_signal,
                     last_price=history[-1].close,
                     portfolio=self.portfolio,
                     context={"sizing_multiplier": sizing_multiplier, "nerve": self.nerve},
@@ -69,16 +103,7 @@ class Pit:
                 if not decision.approved or decision.intent is None:
                     rejections += 1
                     self._nudge_nerve(-0.05)
-                    self.blotter.append(
-                        BlotterEntry(
-                            entry_type=BlotterEntryType.NOTE,
-                            mode=self.settings.runtime.run_mode,
-                            created_at=decision.created_at,
-                            source=source.name,
-                            payload={"symbol": symbol, "reason": decision.reason, "nerve": self.nerve},
-                            notes=decision.reason,
-                        )
-                    )
+                    self._log_note(source.name, symbol, decision.reason)
                     continue
 
                 approvals += 1
@@ -129,5 +154,61 @@ class Pit:
                     "nerve": round(self.nerve, 4),
                 },
                 notes=notes,
+            )
+        )
+
+    def _run_brain(self, context: BrainContext) -> BrainReview | None:
+        if self.brain is None:
+            return None
+
+        review = self.brain.evaluate(context)
+        self.blotter.append(
+            BlotterEntry(
+                entry_type=BlotterEntryType.BRAIN,
+                mode=self.settings.runtime.run_mode,
+                created_at=review.created_at,
+                source=review.source,
+                payload={
+                    "symbol": context.symbol,
+                    "approved": review.approved,
+                    "direction": review.signal.direction,
+                    "confidence": review.signal.confidence,
+                    "metadata": review.metadata,
+                },
+                notes=review.reason,
+            )
+        )
+        return review
+
+    def _run_council(self, context: BrainContext, review: BrainReview):
+        if self.council is None:
+            return None
+
+        verdict = self.council.deliberate(context, review)
+        self.blotter.append(
+            BlotterEntry(
+                entry_type=BlotterEntryType.COUNCIL,
+                mode=self.settings.runtime.run_mode,
+                created_at=verdict.created_at,
+                source=verdict.source,
+                payload={
+                    "symbol": context.symbol,
+                    "approved": verdict.approved,
+                    "metadata": verdict.metadata,
+                },
+                notes=verdict.reason,
+            )
+        )
+        return verdict
+
+    def _log_note(self, source: str, symbol: str, reason: str) -> None:
+        self.blotter.append(
+            BlotterEntry(
+                entry_type=BlotterEntryType.NOTE,
+                mode=self.settings.runtime.run_mode,
+                created_at=datetime.now(timezone.utc),
+                source=source,
+                payload={"symbol": symbol, "reason": reason, "nerve": self.nerve},
+                notes=reason,
             )
         )
