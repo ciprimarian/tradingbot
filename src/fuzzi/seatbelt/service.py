@@ -28,8 +28,12 @@ class SimpleSeatbelt:
         signal: Signal,
         last_price: float,
         portfolio: PortfolioSnapshot,
+        context: Dict[str, Any] | None = None,
     ) -> SeatbeltDecision:
         now = datetime.now(timezone.utc)
+        context = context or {}
+        sizing_multiplier = float(context.get("sizing_multiplier", 1.0))
+        sizing_multiplier = max(0.1, min(sizing_multiplier, 1.0))
 
         if self.settings.risk.long_only and signal.direction.lower() != "buy":
             return SeatbeltDecision(
@@ -56,13 +60,18 @@ class SimpleSeatbelt:
             )
 
         spendable_cash = max(portfolio.cash - self.settings.risk.min_cash_buffer, 0.0)
-        notional = min(self.settings.risk.max_position_notional, spendable_cash)
+        capped_notional = self.settings.risk.max_position_notional * sizing_multiplier
+        notional = min(capped_notional, spendable_cash)
         if notional <= 0:
             return SeatbeltDecision(
                 approved=False,
                 reason="not enough free cash after buffer",
                 created_at=now,
-                metadata={"cash": portfolio.cash, "buffer": self.settings.risk.min_cash_buffer},
+                metadata={
+                    "cash": portfolio.cash,
+                    "buffer": self.settings.risk.min_cash_buffer,
+                    "sizing_multiplier": sizing_multiplier,
+                },
             )
 
         if last_price <= 0:
@@ -91,12 +100,21 @@ class SimpleSeatbelt:
             source=signal.source,
             created_at=now,
             notes=f"seatbelt-approved notional={notional:.2f}",
-            metadata={"confidence": signal.confidence, "score": signal.score, "notional": notional},
+            metadata={
+                "confidence": signal.confidence,
+                "score": signal.score,
+                "notional": notional,
+                "sizing_multiplier": sizing_multiplier,
+            },
         )
         return SeatbeltDecision(
             approved=True,
             reason="approved",
             created_at=now,
-            metadata={"notional": notional, "quantity": quantity},
+            metadata={
+                "notional": notional,
+                "quantity": quantity,
+                "sizing_multiplier": sizing_multiplier,
+            },
             intent=intent,
         )

@@ -1,0 +1,133 @@
+from __future__ import annotations
+
+import asyncio
+from datetime import datetime, timezone
+
+from src.fuzzi.blotter import BlotterEntry, BlotterEntryType, JsonlBlotter
+from src.fuzzi.common.models import Bar, PortfolioSnapshot
+from src.fuzzi.config import FuzziSettings
+from src.fuzzi.runner import RunnerDecision, TradeRunner
+from src.fuzzi.seatbelt import SimpleSeatbelt
+from src.fuzzi.signals import SignalSource
+
+
+class Pit:
+    def __init__(
+        self,
+        settings: FuzziSettings,
+        runner: TradeRunner,
+        seatbelt: SimpleSeatbelt,
+        blotter: JsonlBlotter,
+    ) -> None:
+        self.settings = settings
+        self.runner = runner
+        self.seatbelt = seatbelt
+        self.blotter = blotter
+        self.signal_sources: list[SignalSource] = []
+        self.nerve: float = 0.5
+        self.portfolio = PortfolioSnapshot(
+            timestamp=datetime.now(timezone.utc),
+            cash=100.0,
+            equity=100.0,
+        )
+        self._running = False
+
+    def register_source(self, source: SignalSource) -> None:
+        self.signal_sources.append(source)
+
+    async def tick(self, bars: dict[str, list[Bar]]) -> list[RunnerDecision]:
+        decisions: list[RunnerDecision] = []
+
+        if not self.signal_sources:
+            self._log_tick(symbols=len(bars), signals=0, approvals=0, rejections=0, notes="quiet tape")
+            return decisions
+
+        approvals = 0
+        rejections = 0
+        signals_seen = 0
+
+        for symbol, history in bars.items():
+            if not history:
+                continue
+
+            for source in self.signal_sources:
+                signal = source.evaluate(symbol, history)
+                if signal is None:
+                    continue
+
+                signals_seen += 1
+                self.runner.record_signal(signal)
+
+                sizing_multiplier = 0.5 if self.nerve < 0.3 else 1.0
+                decision = self.seatbelt.review_signal(
+                    signal=signal,
+                    last_price=history[-1].close,
+                    portfolio=self.portfolio,
+                    context={"sizing_multiplier": sizing_multiplier, "nerve": self.nerve},
+                )
+
+                if not decision.approved or decision.intent is None:
+                    rejections += 1
+                    self._nudge_nerve(-0.05)
+                    self.blotter.append(
+                        BlotterEntry(
+                            entry_type=BlotterEntryType.NOTE,
+                            mode=self.settings.runtime.run_mode,
+                            created_at=decision.created_at,
+                            source=source.name,
+                            payload={"symbol": symbol, "reason": decision.reason, "nerve": self.nerve},
+                            notes=decision.reason,
+                        )
+                    )
+                    continue
+
+                approvals += 1
+                self._nudge_nerve(0.03)
+                runner_decision = self.runner.submit_intent(decision.intent)
+                decisions.append(runner_decision)
+
+        self._log_tick(
+            symbols=len(bars),
+            signals=signals_seen,
+            approvals=approvals,
+            rejections=rejections,
+            notes=f"nerve steady at {self.nerve:.2f}",
+        )
+        return decisions
+
+    async def run(self, interval_seconds: int = 60) -> None:
+        self._running = True
+        while self._running:
+            await self.tick({})
+            await asyncio.sleep(interval_seconds)
+
+    def stop(self) -> None:
+        self._running = False
+
+    def _nudge_nerve(self, change: float) -> None:
+        self.nerve = max(0.1, min(1.0, self.nerve + change))
+
+    def _log_tick(
+        self,
+        symbols: int,
+        signals: int,
+        approvals: int,
+        rejections: int,
+        notes: str,
+    ) -> None:
+        self.blotter.append(
+            BlotterEntry(
+                entry_type=BlotterEntryType.TICK,
+                mode=self.settings.runtime.run_mode,
+                created_at=datetime.now(timezone.utc),
+                source="pit",
+                payload={
+                    "symbols": symbols,
+                    "signals": signals,
+                    "approvals": approvals,
+                    "rejections": rejections,
+                    "nerve": round(self.nerve, 4),
+                },
+                notes=notes,
+            )
+        )
