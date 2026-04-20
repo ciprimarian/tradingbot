@@ -33,6 +33,15 @@ class RuntimeSettings:
 
 
 @dataclass(slots=True)
+class LLMSettings:
+    auth_path: str = "~/.codex/auth.json"
+    primary_model: str = "gpt-4o"
+    fallback_model: str = "gpt-4o-mini"
+    max_calls_per_tick: int = 3
+    timeout_seconds: int = 30
+
+
+@dataclass(slots=True)
 class RiskSettings:
     max_position_notional: float = 25.0
     max_open_positions: int = 4
@@ -46,6 +55,7 @@ class FuzziSettings:
     config_path: Path
     broker: BrokerSettings
     runtime: RuntimeSettings
+    llm: LLMSettings
     risk: RiskSettings
     raw_config: Dict[str, Any] = field(default_factory=dict)
 
@@ -98,6 +108,7 @@ def load_settings(config_path: Path | None = None) -> FuzziSettings:
         universe_size=20,
     )
 
+    llm = LLMSettings()
     risk = RiskSettings()
 
     return FuzziSettings(
@@ -105,6 +116,7 @@ def load_settings(config_path: Path | None = None) -> FuzziSettings:
         config_path=resolved_config_path,
         broker=broker,
         runtime=runtime,
+        llm=llm,
         risk=risk,
         raw_config=raw_config,
     )

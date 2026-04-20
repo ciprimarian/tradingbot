@@ -15,6 +15,10 @@ def test_load_settings_defaults():
     assert settings.runtime.run_mode == RunMode.PAPER
     assert settings.runtime.trading_mode.value == "hybrid"
     assert settings.runtime.default_symbol
+    assert settings.llm.auth_path == "~/.codex/auth.json"
+    assert settings.llm.primary_model == "gpt-4o"
+    assert settings.llm.fallback_model == "gpt-4o-mini"
+    assert settings.llm.max_calls_per_tick == 3
 
 
 def test_trade_runner_paper_mode_records_simulated_order(tmp_path):
