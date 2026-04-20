@@ -7,7 +7,10 @@ from src.fuzzi.common.modes import RunMode
 
 
 class BlotterEntryType(str, Enum):
+    TICK = "tick"
     SIGNAL = "signal"
+    BRAIN = "brain"
+    COUNCIL = "council"
     ORDER_INTENT = "order_intent"
     ORDER_SIMULATED = "order_simulated"
     ORDER_SKIPPED = "order_skipped"
@@ -22,4 +25,3 @@ class BlotterEntry:
     source: str
     payload: Dict[str, Any] = field(default_factory=dict)
     notes: str = ""
-

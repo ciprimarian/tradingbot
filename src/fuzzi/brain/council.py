@@ -90,7 +90,6 @@ class Council:
         5. Check for strategist veto
         """
         # Periodic reset: every N rulings, wipe track records.
-        # Forces advisors to continuously prove themselves.
         self._ruling_count += 1
         if self._ruling_count >= self.reset_every_n_trades:
             self._ruling_count = 0
@@ -151,9 +150,8 @@ class Council:
         conviction = max(0.0, raw_conviction - dissent_penalty[dissent])
 
         # Unanimous: suspicious, not reassuring. Small boost but raise threshold.
-        # If all models agree, they might be echoing each other's biases.
         if dissent == DissentPattern.UNANIMOUS:
-            conviction = min(1.0, conviction * 1.1)  # modest boost, not 1.2
+            conviction = min(1.0, conviction * 1.1)
 
         # Strategist veto: if strategist strongly opposes what others want
         strategist_verdicts = [v for v in active if v.role.value == "strategist"]
@@ -162,7 +160,6 @@ class Council:
         if strategist_verdicts and non_strategist:
             strat_score = strategist_verdicts[0].score
             others_direction = sum(v.score for v in non_strategist) / len(non_strategist)
-            # Strategist strongly opposes the direction others want
             if others_direction > 0.2 and strat_score < self.strategist_veto_threshold:
                 vetoed = True
             elif others_direction < -0.2 and strat_score > -self.strategist_veto_threshold:
