@@ -70,10 +70,13 @@ class Council:
         advisors: list[Advisor],
         conviction_threshold: float = 0.4,
         strategist_veto_threshold: float = -0.5,
+        reset_every_n_trades: int = 30,
     ) -> None:
         self.advisors = advisors
         self.conviction_threshold = conviction_threshold
         self.strategist_veto_threshold = strategist_veto_threshold
+        self.reset_every_n_trades = reset_every_n_trades
+        self._ruling_count = 0
 
     def rule(self, verdicts: list[AdvisorVerdict]) -> CouncilRuling:
         """
@@ -86,6 +89,14 @@ class Council:
         4. Apply dissent penalty
         5. Check for strategist veto
         """
+        # Periodic reset: every N rulings, wipe track records.
+        # Forces advisors to continuously prove themselves.
+        self._ruling_count += 1
+        if self._ruling_count >= self.reset_every_n_trades:
+            self._ruling_count = 0
+            for advisor in self.advisors:
+                advisor.reset_track_record()
+
         if not verdicts:
             return CouncilRuling(
                 action=RulingAction.HOLD,
@@ -139,9 +150,10 @@ class Council:
         }
         conviction = max(0.0, raw_conviction - dissent_penalty[dissent])
 
-        # Unanimous boost
+        # Unanimous: suspicious, not reassuring. Small boost but raise threshold.
+        # If all models agree, they might be echoing each other's biases.
         if dissent == DissentPattern.UNANIMOUS:
-            conviction = min(1.0, conviction * 1.2)
+            conviction = min(1.0, conviction * 1.1)  # modest boost, not 1.2
 
         # Strategist veto: if strategist strongly opposes what others want
         strategist_verdicts = [v for v in active if v.role.value == "strategist"]

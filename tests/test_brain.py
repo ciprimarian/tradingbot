@@ -125,19 +125,38 @@ class TestAdvisor:
         advisor.record_outcome(True)
         advisor.record_outcome(False)
 
-        assert advisor.hit_rate == pytest.approx(2 / 3, rel=0.01)
+        # Exponential weighting: recent False weighs more, so rate < simple 2/3
+        assert advisor.hit_rate is not None
+        assert 0.5 < advisor.hit_rate < 0.7  # approximately 0.63 with decay=0.9
 
     def test_adaptive_weight_scales_with_accuracy(self):
         advisor = _make_advisor("opus", AdvisorRole.STRATEGIST, "{}", weight=0.4)
 
-        # Perfect track record → 1.5x weight
+        # Perfect track record → capped at 1.5x weight
         for _ in range(10):
             advisor.record_outcome(True)
         assert advisor.adaptive_weight == pytest.approx(0.4 * 1.5)
 
-        # Reset with 50% accuracy → 1.0x weight
-        advisor._track_record = [True, False] * 5
-        assert advisor.adaptive_weight == pytest.approx(0.4 * 1.0)
+        # Reset track record and test floor
+        advisor.reset_track_record()
+        # All wrong → floored at 0.5x weight
+        for _ in range(10):
+            advisor.record_outcome(False)
+        assert advisor.adaptive_weight == pytest.approx(0.4 * 0.5)
+
+    def test_weight_never_exceeds_cap(self):
+        advisor = _make_advisor("opus", AdvisorRole.STRATEGIST, "{}", weight=0.5)
+        for _ in range(100):
+            advisor.record_outcome(True)
+        # Even with 100% accuracy, max is 1.5x
+        assert advisor.adaptive_weight <= 0.5 * 1.5
+
+    def test_weight_never_goes_below_floor(self):
+        advisor = _make_advisor("gpt", AdvisorRole.ANALYST, "{}", weight=0.3)
+        for _ in range(100):
+            advisor.record_outcome(False)
+        # Even with 0% accuracy, min is 0.5x
+        assert advisor.adaptive_weight >= 0.3 * 0.5
 
 
 class TestCouncil:

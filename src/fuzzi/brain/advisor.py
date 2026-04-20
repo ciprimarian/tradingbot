@@ -213,20 +213,42 @@ class Advisor:
         if len(self._track_record) > 50:
             self._track_record = self._track_record[-50:]
 
+    def reset_track_record(self) -> None:
+        """Periodic reset — forces advisor to re-earn trust from scratch."""
+        self._track_record = []
+
     @property
     def hit_rate(self) -> Optional[float]:
-        """Recent accuracy. None if no track record yet."""
+        """
+        Recent accuracy using exponential weighting.
+        Recent outcomes matter more than old ones — a win 2 trades ago
+        counts more than a win 20 trades ago. Decay factor 0.9.
+        Returns None if no track record yet.
+        """
         if not self._track_record:
             return None
-        return sum(self._track_record) / len(self._track_record)
+        decay = 0.9
+        weighted_sum = 0.0
+        weight_total = 0.0
+        for i, correct in enumerate(reversed(self._track_record)):
+            w = decay ** i
+            weighted_sum += correct * w
+            weight_total += w
+        return weighted_sum / weight_total if weight_total > 0 else None
 
     @property
     def adaptive_weight(self) -> float:
-        """Weight adjusted by track record. Better accuracy → more influence."""
+        """
+        Weight adjusted by track record, with hard caps to prevent
+        any single advisor from dominating or being silenced.
+
+        - Floor: 0.5x base weight (always has a voice)
+        - Cap: 1.5x base weight (never takes over)
+        - No track record: base weight (must earn trust)
+        """
         rate = self.hit_rate
         if rate is None:
             return self.weight
-        # Scale weight between 0.5x and 1.5x based on hit rate
-        # 50% accuracy → 0.5x weight, 100% → 1.5x weight
-        multiplier = 0.5 + rate
+        # 50% accuracy → 0.5x, 75% → 1.0x, 100% → 1.5x
+        multiplier = max(0.5, min(1.5, 0.5 + rate))
         return self.weight * multiplier
