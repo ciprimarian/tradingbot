@@ -11,6 +11,7 @@ class BlotterEntryType(str, Enum):
     SIGNAL = "signal"
     BRAIN = "brain"
     COUNCIL = "council"
+    OUTCOME = "outcome"
     ORDER_INTENT = "order_intent"
     ORDER_SIMULATED = "order_simulated"
     ORDER_SKIPPED = "order_skipped"

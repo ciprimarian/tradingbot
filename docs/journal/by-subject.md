@@ -56,6 +56,10 @@ Every event grouped by the subsystem it touches.
 
 - `2026-04-22` ✓ RULES.md added — short-form rulebook every agent reads on session start. AGENTS.md now points at it.
 
+## pit.feedback
+
+- `2026-04-21` ✓ nerve no longer records wins on seatbelt approval; realized pnl updates flow through pit.record_outcome and blotter outcome entries
+
 ## pit.nerve
 
 - `2026-04-21` ✓ pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior `[f90bb22]`

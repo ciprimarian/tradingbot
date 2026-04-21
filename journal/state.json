@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T22:22:00Z",
+  "updated_at": "2026-04-21T22:57:54Z",
   "now": [
     {
       "subject": "regime.classify",
@@ -14,9 +14,9 @@
       "lane": "testing"
     },
     {
-      "subject": "backtest.ingestion",
-      "text": "historical Alpaca bars → parquet storage for backtests",
-      "since": "2026-04-21T22:15:05Z",
+      "subject": "pit.portfolio",
+      "text": "replace static $100 portfolio snapshot with updated cash and positions so seatbelt sizes against reality",
+      "since": "2026-04-21T22:57:54Z",
       "lane": "compute"
     }
   ],
@@ -26,19 +26,23 @@
     "first paper-trade dry run on SPY with gap reversion + nerve + brain",
     "alpaca live tape WebSocket ingestion (compute lane)"
   ],
-  "blocked": [
-    {
-      "subject": "tests.legacy_integration",
-      "text": "test_brokers::test_connection and test_strategies::test_data_fetch_and_strategy hit live Alpaca endpoints — fail 401 without real credentials; need mock or pytest.mark.integration skip",
-      "lane": "testing"
-    }
-  ],
-  "tests_passing": 129,
-  "tests_skipped": 10,
-  "tests_failing": 2,
+  "blocked": [],
+  "tests_passing": 88,
   "open_todos": [
-    {"file": "src/fuzzi/regime/detector.py", "symbol": "_classify", "note": "thresholds → regime mapping"},
-    {"file": "tests/test_brokers.py", "symbol": "test_connection", "note": "needs mock or @pytest.mark.integration to skip without live creds"},
-    {"file": "tests/test_strategies.py", "symbol": "test_data_fetch_and_strategy", "note": "needs mock or @pytest.mark.integration to skip without live creds"}
+    {
+      "file": "src/fuzzi/regime/detector.py",
+      "symbol": "_classify",
+      "note": "thresholds → regime mapping"
+    },
+    {
+      "file": "tests/test_brokers.py",
+      "symbol": "test_connection",
+      "note": "needs mock or @pytest.mark.integration to skip without live creds"
+    },
+    {
+      "file": "tests/test_strategies.py",
+      "symbol": "test_data_fetch_and_strategy",
+      "note": "needs mock or @pytest.mark.integration to skip without live creds"
+    }
   ]
 }

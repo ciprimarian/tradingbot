@@ -1,6 +1,6 @@
 # Full chronology
 
-All 25 events, oldest first. For git-level time-travel: `git show <sha>:journal/events.jsonl`.
+All 26 events, oldest first. For git-level time-travel: `git show <sha>:journal/events.jsonl`.
 
 ## 2026-04-20
 
@@ -22,6 +22,7 @@ All 25 events, oldest first. For git-level time-travel: `git show <sha>:journal/
 - `22:15` ✓ **pit.nerve** — pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior `[f90bb22]`
 - `22:22` · **tests.bootstrap** — conftest.py added: stubs ALPACA_API_KEY/SECRET env vars so tests collect without live credentials; exposes two pre-existing legacy integration tests (test_brokers::test_connection, test_strategies::test_data_fetch_and_strategy) that hit real Alpaca endpoints — fail with 401, not a new regression
 - `22:22` ✓ **tests.adversarial** — adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands `[a4b29d5]`
+- `22:57` ✓ **pit.feedback** — nerve no longer records wins on seatbelt approval; realized pnl updates flow through pit.record_outcome and blotter outcome entries
 ## 2026-04-22
 
 - `08:00` ◆ **workflow.lanes** — three-agent split: compute lane (heavy continuous work, remote box), judgment lane (brain/signals/design, local), testing lane (adversarial tests, backtests, validation).

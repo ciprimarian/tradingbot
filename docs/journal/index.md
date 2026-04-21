@@ -6,7 +6,7 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 
 - **regime.classify** `judgment` — classify logic (thresholds → regime) open as TODO in src/fuzzi/regime/detector.py
 - **tests.brain** `testing` — stress-test brain Council under degenerate advisor outputs (all abstain, all extreme, one NaN confidence)
-- **backtest.ingestion** `compute` — historical Alpaca bars → parquet storage for backtests
+- **pit.portfolio** `compute` — replace static $100 portfolio snapshot with updated cash and positions so seatbelt sizes against reality
 
 ## Up next
 
@@ -35,6 +35,7 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `22:15` ✓ **pit.nerve** — pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior `[f90bb22]`
 - `22:22` · **tests.bootstrap** — conftest.py added: stubs ALPACA_API_KEY/SECRET env vars so tests collect without live credentials; exposes two pre-existing legacy integration tests (test_brokers::test_connection, test_strategies::test_data_fetch_and_strategy) that hit real Alpaca endpoints — fail with 401, not a new regression
 - `22:22` ✓ **tests.adversarial** — adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands `[a4b29d5]`
+- `22:57` ✓ **pit.feedback** — nerve no longer records wins on seatbelt approval; realized pnl updates flow through pit.record_outcome and blotter outcome entries
 
 ### 2026-04-20
 
@@ -60,4 +61,4 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `✗ blocked` — waiting on something
 - `· note` — observation
 
-_Rendered 2026-04-21 22:29 UTC from 25 events._
+_Rendered 2026-04-21 23:01 UTC from 26 events._

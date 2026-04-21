@@ -109,7 +109,6 @@ class Pit:
                     continue
 
                 approvals += 1
-                self.nerve.record_win(source.name)
                 runner_decision = self.runner.submit_intent(decision.intent)
                 decisions.append(runner_decision)
 
@@ -209,5 +208,37 @@ class Pit:
                 source=source,
                 payload={"symbol": symbol, "reason": reason, "nerve": self.nerve.state().global_nerve},
                 notes=reason,
+            )
+        )
+
+    def record_outcome(
+        self,
+        strategy: str,
+        pnl: float,
+        *,
+        symbol: str | None = None,
+        notes: str = "",
+    ) -> None:
+        if pnl > 0:
+            self.nerve.record_win(strategy, pnl=pnl)
+            outcome_note = notes or "realized win"
+        elif pnl < 0:
+            self.nerve.record_loss(strategy, pnl=pnl)
+            outcome_note = notes or "realized loss"
+        else:
+            outcome_note = notes or "flat close"
+
+        self.blotter.append(
+            BlotterEntry(
+                entry_type=BlotterEntryType.OUTCOME,
+                mode=self.settings.runtime.run_mode,
+                created_at=datetime.now(timezone.utc),
+                source=strategy,
+                payload={
+                    "symbol": symbol,
+                    "pnl": pnl,
+                    "nerve": self.nerve.state().global_nerve,
+                },
+                notes=outcome_note,
             )
         )

@@ -168,8 +168,29 @@ def test_nerve_moves_with_rejections_and_approvals(tmp_path):
     pit.register_source(FixedSignalSource(approval_signal))
     __import__("asyncio").run(pit.tick({"SPY": _bar_series("SPY", 100.0, 100.0, 100.0)}))
     after_approval = pit.nerve.state().global_nerve
-    assert after_approval == pytest.approx(0.509, abs=0.0001)
-    assert after_approval > after_rejection
+    assert after_approval == pytest.approx(after_rejection, abs=0.0001)
+
+    pit.record_outcome("fixed", pnl=10.0, symbol="SPY")
+    after_win = pit.nerve.state().global_nerve
+    assert after_win == pytest.approx(0.5105, abs=0.0001)
+    assert after_win > after_approval
+
+
+def test_record_outcome_logs_realized_result(tmp_path):
+    settings = load_settings()
+    blotter = JsonlBlotter(tmp_path / "pit.jsonl")
+    runner = TradeRunner(settings=settings, blotter=blotter)
+    seatbelt = SimpleSeatbelt(settings)
+    pit = Pit(settings=settings, runner=runner, seatbelt=seatbelt, blotter=blotter)
+
+    pit.record_outcome("gap_reversion", pnl=-12.5, symbol="SPY")
+
+    lines = (tmp_path / "pit.jsonl").read_text(encoding="utf-8").strip().splitlines()
+    payload = json.loads(lines[-1])
+    assert payload["entry_type"] == "outcome"
+    assert payload["source"] == "gap_reversion"
+    assert payload["payload"]["pnl"] == -12.5
+    assert payload["notes"] == "realized loss"
 
 
 def test_low_nerve_halves_position_sizing(tmp_path):
