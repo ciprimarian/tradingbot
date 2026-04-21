@@ -50,11 +50,20 @@ Every event grouped by the subsystem it touches.
 
 ## pit.nerve
 
+- `2026-04-21` ✓ pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior
 - `2026-04-22` ✗ wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev
 
 ## regime.classify
 
 - `2026-04-22` • open — thresholds that map (efficiency_ratio, volatility, direction) → regime + confidence need to be chosen
+
+## tests.adversarial
+
+- `2026-04-21` ✓ adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands then lock in the regime mapping `[f31664a]`
+
+## tests.bootstrap
+
+- `2026-04-21` · conftest.py added: stubs ALPACA_API_KEY/SECRET env vars so tests collect without live credentials; exposes two pre-existing legacy integration tests (test_brokers::test_connection, test_strategies::test_data_fetch_and_strategy) that hit real Alpaca endpoints — fail with 401, not a new regression
 
 ## workflow.branches
 

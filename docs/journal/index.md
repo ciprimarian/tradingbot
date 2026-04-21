@@ -5,7 +5,7 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 ## Right now
 
 - **regime.classify** `judgment` — classify logic (thresholds → regime) open as TODO in src/fuzzi/regime/detector.py
-- **tests.adversarial** `testing` — write failure-seeking tests for brain/regime/nerve; run backtests to validate gap reversion edge
+- **tests.brain** `testing` — stress-test brain Council under degenerate advisor outputs (all abstain, all extreme, one NaN confidence)
 - **backtest.ingestion** `compute` — historical Alpaca bars → parquet storage for backtests
 
 ## Up next
@@ -13,7 +13,6 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - wire regime detector into pit (regime gates which signal sources fire)
 - add momentum signal source as second edge alongside gap reversion
 - first paper-trade dry run on SPY with gap reversion + nerve + brain
-- historical data ingestion for backtests (Alpaca bars → parquet)
 - alpaca live tape WebSocket ingestion (compute lane)
 
 ## Recent activity
@@ -30,6 +29,8 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 
 - `00:00` ◆ **workflow.branches** — minimal branches: main (production-ready), dev (active work), data (archive). All three agents commit to dev.
 - `22:15` ✓ **pit.nerve** — pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior
+- `22:22` · **tests.bootstrap** — conftest.py added: stubs ALPACA_API_KEY/SECRET env vars so tests collect without live credentials; exposes two pre-existing legacy integration tests (test_brokers::test_connection, test_strategies::test_data_fetch_and_strategy) that hit real Alpaca endpoints — fail with 401, not a new regression
+- `22:22` ✓ **tests.adversarial** — adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands then lock in the regime mapping `[f31664a]`
 
 ### 2026-04-20
 
@@ -55,4 +56,4 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `✗ blocked` — waiting on something
 - `· note` — observation
 
-_Rendered 2026-04-21 22:15 UTC from 19 events._
+_Rendered 2026-04-21 22:24 UTC from 21 events._
