@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T23:15:00Z",
+  "updated_at": "2026-04-22T10:00:00Z",
   "now": [
     {
       "subject": "regime.classify",
@@ -18,6 +18,12 @@
       "text": "judgment lane to decide: (1) gap reversion fill model — same-day entry vs multi-bar hold; (2) council MAJORITY threshold calibration; (3) global vs per-strategy nerve pool design",
       "since": "2026-04-21T23:15:00Z",
       "lane": "judgment"
+    },
+    {
+      "subject": "council.board_model",
+      "text": "implement board-model council: AdvisorVerdict.reasoning_quality field + Council._score_reasoning() heuristic + rule() uses quality in effective weight. spec: tests/test_council_board_model.py (28 xfailed). quality heuristic: score 0–1 based on numbers, indicator names, price levels, percentages in reasoning text.",
+      "since": "2026-04-22T10:00:00Z",
+      "lane": "judgment"
     }
   ],
   "next": [
@@ -29,13 +35,16 @@
     "add @pytest.mark.integration to legacy Alpaca tests"
   ],
   "blocked": [],
-  "tests_passing": 286,
+  "tests_passing": 288,
   "tests_skipped": 10,
   "tests_failing": 3,
-  "tests_xfailed": 7,
+  "tests_xfailed": 35,
   "open_todos": [
     {"file": "src/fuzzi/regime/detector.py", "symbol": "_classify", "note": "thresholds → regime mapping"},
     {"file": "src/fuzzi/brain/advisor.py", "symbol": "score", "note": "NaN confidence propagates to NaN score → NaN council conviction"},
+    {"file": "src/fuzzi/brain/advisor.py", "symbol": "AdvisorVerdict", "note": "add reasoning_quality: float | None = None field (board model spec)"},
+    {"file": "src/fuzzi/brain/council.py", "symbol": "_score_reasoning", "note": "new method: heuristic 0–1 scorer for reasoning text quality (numbers, indicators, price levels)"},
+    {"file": "src/fuzzi/brain/council.py", "symbol": "rule", "note": "use reasoning_quality in effective weight: base_weight × clamp(reasoning_quality, 0.05, 1.0)"},
     {"file": "src/fuzzi/brain/council.py", "symbol": "MAJORITY dissent_penalty", "note": "0.15 penalty collapses 2v1 conviction below 0.4 threshold — calibration needed"},
     {"file": "src/fuzzi/signals/gap_reversion.py", "symbol": "evaluate", "note": "sell leg dead under long-only seatbelt; next-bar fill model gives 0% win rate in choppy"},
     {"file": "tests/test_brokers.py", "symbol": "test_connection", "note": "needs @pytest.mark.integration to skip without live creds"},

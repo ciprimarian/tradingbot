@@ -15,6 +15,10 @@ Every event grouped by the subsystem it touches.
 - `2026-04-20` ✓ OpenClawProvider added; unanimous boost reduced from 1.2x to 1.1x `[bffb9a3]`
 - `2026-04-20` ✓ CodexOAuthProvider implemented with auto-refresh on 401 `[fbb851f]`
 
+## council.board_model
+
+- `2026-04-22` ◆ council redesign: vote weight driven by per-verdict reasoning quality, not fixed role hierarchy. board member who came with specific data (numbers, indicator names, price levels) carries more weight than one who showed up with vague sentiment. spec written as 29 tests in test_council_board_model.py — judgment lane implements to pass them.
+
 ## fuzzi.brain
 
 - `2026-04-20` ✓ brain layer: Advisor + Council with weighted consensus, MockProvider for tests `[ec88373]`
@@ -77,6 +81,7 @@ Every event grouped by the subsystem it touches.
 
 - `2026-04-21` ✓ adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands `[a4b29d5]`
 - `2026-04-21` ✓ six adversarial test batches added (council, signals, seatbelt, backtest, nerve, blotter+runner): 157 new tests, 7 xfail documenting real bugs — NaN score propagation in AdvisorVerdict, 2v1 majority conviction collapse, sizing_multiplier=0 override by seatbelt floor, gap reversion zero win-rate under next-bar fill model, inverted regime preference, global nerve cratering from single strategy `[5defe6e]`
+- `2026-04-22` ✓ wrote board-model council spec: 29 tests covering _score_reasoning heuristic (empty/vague/specific/rich reasoning), AdvisorVerdict.reasoning_quality field, board-model weighting in rule(), conviction modulation, and old-vs-new behavioral comparison. 28 xfailed (unimplemented), 1 regression anchor passing. full suite now: 288 passing, 35 xfailed, 3 failing (integration), 10 skipped.
 
 ## tests.bootstrap
 

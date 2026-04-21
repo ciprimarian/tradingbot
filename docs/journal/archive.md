@@ -1,6 +1,6 @@
 # Full chronology
 
-All 28 events, oldest first. For git-level time-travel: `git show <sha>:journal/events.jsonl`.
+All 30 events, oldest first. For git-level time-travel: `git show <sha>:journal/events.jsonl`.
 
 ## 2026-04-20
 
@@ -36,4 +36,6 @@ All 28 events, oldest first. For git-level time-travel: `git show <sha>:journal/
 - `09:30` ◆ **workflow.voice** — no AI-speak. simple, concise, direct. no corporate hedging, no motivational-poster sentences.
 - `09:30` ✓ **journal.rules** — RULES.md added — short-form rulebook every agent reads on session start.
 - `09:30` ✓ **journal.primers** — primers stripped of volatile sections; assignments now live only in state.json.now keyed by lane.
+- `10:00` ◆ **council.board_model** — council redesign: vote weight driven by per-verdict reasoning quality, not fixed role hierarchy. board member who came with specific data (numbers, indicator names, price levels) carries more weight than one who showed up with vague sentiment. spec written as 29 tests in test_council_board_model.py — judgment lane implements to pass them.
+- `10:00` ✓ **tests.adversarial** — wrote board-model council spec: 29 tests covering _score_reasoning heuristic (empty/vague/specific/rich reasoning), AdvisorVerdict.reasoning_quality field, board-model weighting in rule(), conviction modulation, and old-vs-new behavioral comparison. 28 xfailed (unimplemented), 1 regression anchor passing. full suite now: 288 passing, 35 xfailed, 3 failing (integration), 10 skipped.
 

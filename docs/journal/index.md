@@ -7,6 +7,7 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - **regime.classify** `judgment` — classify logic (thresholds → regime) open as TODO in src/fuzzi/regime/detector.py
 - **pit.portfolio** `compute` — replace static $100 portfolio snapshot with updated cash and positions so seatbelt sizes against reality
 - **tests.findings.resolution** `judgment` — judgment lane to decide: (1) gap reversion fill model — same-day entry vs multi-bar hold; (2) council MAJORITY threshold calibration; (3) global vs per-strategy nerve pool design
+- **council.board_model** `judgment` — implement board-model council: AdvisorVerdict.reasoning_quality field + Council._score_reasoning() heuristic + rule() uses quality in effective weight. spec: tests/test_council_board_model.py (28 xfailed). quality heuristic: score 0–1 based on numbers, indicator names, price levels, percentages in reasoning text.
 
 ## Up next
 
@@ -30,6 +31,8 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `09:30` ◆ **workflow.voice** — no AI-speak. simple, concise, direct. no corporate hedging, no motivational-poster sentences.
 - `09:30` ✓ **journal.rules** — RULES.md added — short-form rulebook every agent reads on session start.
 - `09:30` ✓ **journal.primers** — primers stripped of volatile sections; assignments now live only in state.json.now keyed by lane.
+- `10:00` ◆ **council.board_model** — council redesign: vote weight driven by per-verdict reasoning quality, not fixed role hierarchy. board member who came with specific data (numbers, indicator names, price levels) carries more weight than one who showed up with vague sentiment. spec written as 29 tests in test_council_board_model.py — judgment lane implements to pass them.
+- `10:00` ✓ **tests.adversarial** — wrote board-model council spec: 29 tests covering _score_reasoning heuristic (empty/vague/specific/rich reasoning), AdvisorVerdict.reasoning_quality field, board-model weighting in rule(), conviction modulation, and old-vs-new behavioral comparison. 28 xfailed (unimplemented), 1 regression anchor passing. full suite now: 288 passing, 35 xfailed, 3 failing (integration), 10 skipped.
 
 ### 2026-04-21
 
@@ -65,4 +68,4 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `✗ blocked` — waiting on something
 - `· note` — observation
 
-_Rendered 2026-04-21 23:11 UTC from 28 events._
+_Rendered 2026-04-21 23:21 UTC from 30 events._
