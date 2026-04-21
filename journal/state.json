@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T22:57:54Z",
+  "updated_at": "2026-04-21T23:15:00Z",
   "now": [
     {
       "subject": "regime.classify",
@@ -8,41 +8,37 @@
       "lane": "judgment"
     },
     {
-      "subject": "tests.brain",
-      "text": "stress-test brain Council under degenerate advisor outputs (all abstain, all extreme, one NaN confidence)",
-      "since": "2026-04-21T22:22:00Z",
-      "lane": "testing"
-    },
-    {
       "subject": "pit.portfolio",
       "text": "replace static $100 portfolio snapshot with updated cash and positions so seatbelt sizes against reality",
       "since": "2026-04-21T22:57:54Z",
       "lane": "compute"
+    },
+    {
+      "subject": "tests.findings.resolution",
+      "text": "judgment lane to decide: (1) gap reversion fill model — same-day entry vs multi-bar hold; (2) council MAJORITY threshold calibration; (3) global vs per-strategy nerve pool design",
+      "since": "2026-04-21T23:15:00Z",
+      "lane": "judgment"
     }
   ],
   "next": [
-    "wire regime detector into pit (regime gates which signal sources fire)",
+    "fix NaN confidence propagation in AdvisorVerdict.score (guard in score property)",
+    "wire regime detector into pit once _classify is implemented",
     "add momentum signal source as second edge alongside gap reversion",
     "first paper-trade dry run on SPY with gap reversion + nerve + brain",
-    "alpaca live tape WebSocket ingestion (compute lane)"
+    "alpaca live tape WebSocket ingestion (compute lane)",
+    "add @pytest.mark.integration to legacy Alpaca tests"
   ],
   "blocked": [],
-  "tests_passing": 88,
+  "tests_passing": 286,
+  "tests_skipped": 10,
+  "tests_failing": 3,
+  "tests_xfailed": 7,
   "open_todos": [
-    {
-      "file": "src/fuzzi/regime/detector.py",
-      "symbol": "_classify",
-      "note": "thresholds → regime mapping"
-    },
-    {
-      "file": "tests/test_brokers.py",
-      "symbol": "test_connection",
-      "note": "needs mock or @pytest.mark.integration to skip without live creds"
-    },
-    {
-      "file": "tests/test_strategies.py",
-      "symbol": "test_data_fetch_and_strategy",
-      "note": "needs mock or @pytest.mark.integration to skip without live creds"
-    }
+    {"file": "src/fuzzi/regime/detector.py", "symbol": "_classify", "note": "thresholds → regime mapping"},
+    {"file": "src/fuzzi/brain/advisor.py", "symbol": "score", "note": "NaN confidence propagates to NaN score → NaN council conviction"},
+    {"file": "src/fuzzi/brain/council.py", "symbol": "MAJORITY dissent_penalty", "note": "0.15 penalty collapses 2v1 conviction below 0.4 threshold — calibration needed"},
+    {"file": "src/fuzzi/signals/gap_reversion.py", "symbol": "evaluate", "note": "sell leg dead under long-only seatbelt; next-bar fill model gives 0% win rate in choppy"},
+    {"file": "tests/test_brokers.py", "symbol": "test_connection", "note": "needs @pytest.mark.integration to skip without live creds"},
+    {"file": "tests/test_strategies.py", "symbol": "test_data_fetch_and_strategy", "note": "needs @pytest.mark.integration to skip without live creds"}
   ]
 }
