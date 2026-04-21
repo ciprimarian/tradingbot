@@ -5,8 +5,8 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 ## Right now
 
 - **regime.classify** `judgment` — classify logic (thresholds → regime) open as TODO in src/fuzzi/regime/detector.py
-- **pit.nerve** `compute` — replace pit's raw nerve float with NerveTracker from src/fuzzi/nerve *(blocked: dev rebase required first)*
 - **tests.adversarial** `testing` — write failure-seeking tests for brain/regime/nerve; run backtests to validate gap reversion edge
+- **backtest.ingestion** `compute` — historical Alpaca bars → parquet storage for backtests
 
 ## Up next
 
@@ -29,6 +29,7 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 ### 2026-04-21
 
 - `00:00` ◆ **workflow.branches** — minimal branches: main (production-ready), dev (active work), data (archive). All three agents commit to dev.
+- `22:15` ✓ **pit.nerve** — pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior
 
 ### 2026-04-20
 
@@ -54,4 +55,4 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `✗ blocked` — waiting on something
 - `· note` — observation
 
-_Rendered 2026-04-21 22:04 UTC from 18 events._
+_Rendered 2026-04-21 22:15 UTC from 19 events._

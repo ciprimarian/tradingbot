@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 
+import pytest
+
 from src.fuzzi.blotter import JsonlBlotter
 from src.fuzzi.brain import Brain, BrainContext, BrainReview
 from src.fuzzi.brain.gate import CouncilGate, CouncilGateRule, CouncilGateVerdict
@@ -148,9 +150,12 @@ def test_nerve_moves_with_rejections_and_approvals(tmp_path):
         source="fixed",
         timestamp=datetime.now(timezone.utc),
     )
+    starting = pit.nerve.state().global_nerve
     pit.register_source(FixedSignalSource(rejection_signal))
     __import__("asyncio").run(pit.tick({"SPY": _bar_series("SPY", 100.0, 100.0, 100.0)}))
-    assert pit.nerve == 0.45
+    after_rejection = pit.nerve.state().global_nerve
+    assert after_rejection == pytest.approx(0.497, abs=0.0001)
+    assert after_rejection < starting
 
     pit.signal_sources.clear()
     approval_signal = Signal(
@@ -162,7 +167,9 @@ def test_nerve_moves_with_rejections_and_approvals(tmp_path):
     )
     pit.register_source(FixedSignalSource(approval_signal))
     __import__("asyncio").run(pit.tick({"SPY": _bar_series("SPY", 100.0, 100.0, 100.0)}))
-    assert pit.nerve == 0.48
+    after_approval = pit.nerve.state().global_nerve
+    assert after_approval == pytest.approx(0.509, abs=0.0001)
+    assert after_approval > after_rejection
 
 
 def test_low_nerve_halves_position_sizing(tmp_path):
@@ -171,7 +178,10 @@ def test_low_nerve_halves_position_sizing(tmp_path):
     runner = TradeRunner(settings=settings, blotter=blotter)
     seatbelt = SimpleSeatbelt(settings)
     pit = Pit(settings=settings, runner=runner, seatbelt=seatbelt, blotter=blotter)
-    pit.nerve = 0.25
+    for _ in range(8):
+        pit.nerve.record_loss("test", pnl=-50)
+    pre_tick_nerve = pit.nerve.state().global_nerve
+    pre_tick_multiplier = pit.nerve.sizing_multiplier
     pit.portfolio = PortfolioSnapshot(
         timestamp=datetime.now(timezone.utc),
         cash=100.0,
@@ -192,7 +202,9 @@ def test_low_nerve_halves_position_sizing(tmp_path):
     lines = (tmp_path / "pit.jsonl").read_text(encoding="utf-8").strip().splitlines()
     payloads = [json.loads(line) for line in lines]
     order_payload = next(item for item in payloads if item["entry_type"] == "order_intent")
-    assert order_payload["payload"]["quantity"] == 0.25
+    assert pre_tick_nerve < 0.3
+    expected_quantity = (settings.risk.max_position_notional * pre_tick_multiplier) / 50.0
+    assert order_payload["payload"]["quantity"] == pytest.approx(expected_quantity, abs=1e-6)
 
 
 def test_brain_can_override_signal_before_seatbelt(tmp_path):
@@ -244,7 +256,7 @@ def test_council_can_veto_brain_approved_signal(tmp_path):
     decisions = __import__("asyncio").run(pit.tick({"SPY": _bar_series("SPY", 100.0, 100.0, 100.0)}))
 
     assert decisions == []
-    assert pit.nerve == 0.45
+    assert pit.nerve.state().global_nerve == pytest.approx(0.497, abs=0.0001)
     lines = (tmp_path / "pit.jsonl").read_text(encoding="utf-8").strip().splitlines()
     payloads = [json.loads(line) for line in lines]
     assert any(item["entry_type"] == "council" for item in payloads)

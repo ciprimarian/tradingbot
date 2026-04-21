@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-22T08:30:00Z",
+  "updated_at": "2026-04-21T22:15:05Z",
   "now": [
     {
       "subject": "regime.classify",
@@ -8,17 +8,16 @@
       "lane": "judgment"
     },
     {
-      "subject": "pit.nerve",
-      "text": "replace pit's raw nerve float with NerveTracker from src/fuzzi/nerve",
-      "since": "2026-04-22T08:30:00Z",
-      "lane": "compute",
-      "blocker": "dev rebase required first"
-    },
-    {
       "subject": "tests.adversarial",
       "text": "write failure-seeking tests for brain/regime/nerve; run backtests to validate gap reversion edge",
       "since": "2026-04-22T08:30:00Z",
       "lane": "testing"
+    },
+    {
+      "subject": "backtest.ingestion",
+      "text": "historical Alpaca bars → parquet storage for backtests",
+      "since": "2026-04-21T22:15:05Z",
+      "lane": "compute"
     }
   ],
   "next": [

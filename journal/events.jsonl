@@ -16,3 +16,4 @@
 {"ts":"2026-04-22T08:30:00Z","kind":"done","subject":"fuzzi.regime","text":"regime detector scaffolded: efficiency_ratio + volatility indicators, five regimes (TRENDING_UP/DOWN, CHOPPY, CALM, VOLATILE). _classify logic left as open TODO."}
 {"ts":"2026-04-22T08:30:00Z","kind":"now","subject":"regime.classify","text":"open — thresholds that map (efficiency_ratio, volatility, direction) → regime + confidence need to be chosen"}
 {"ts":"2026-04-22T08:30:00Z","kind":"blocked","subject":"pit.nerve","text":"wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev"}
+{"ts":"2026-04-21T22:15:05Z","kind":"done","subject":"pit.nerve","text":"pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior"}

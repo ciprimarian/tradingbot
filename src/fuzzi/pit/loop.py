@@ -8,6 +8,7 @@ from src.fuzzi.brain import Brain, BrainContext, BrainReview
 from src.fuzzi.brain.gate import CouncilGate
 from src.fuzzi.common.models import Bar, PortfolioSnapshot
 from src.fuzzi.config import FuzziSettings
+from src.fuzzi.nerve import NerveTracker
 from src.fuzzi.runner import RunnerDecision, TradeRunner
 from src.fuzzi.seatbelt import SimpleSeatbelt
 from src.fuzzi.signals import SignalSource
@@ -28,7 +29,7 @@ class Pit:
         self.signal_sources: list[SignalSource] = []
         self.brain: Brain | None = None
         self.council: CouncilGate | None = None
-        self.nerve: float = 0.5
+        self.nerve = NerveTracker()
         self.portfolio = PortfolioSnapshot(
             timestamp=datetime.now(timezone.utc),
             cash=100.0,
@@ -68,13 +69,13 @@ class Pit:
                 signals_seen += 1
                 self.runner.record_signal(signal)
 
-                sizing_multiplier = 0.5 if self.nerve < 0.3 else 1.0
+                sizing_multiplier = self.nerve.sizing_multiplier
                 reviewed_signal = signal
                 brain_context = BrainContext(
                     symbol=symbol,
                     bars=history,
                     signal=signal,
-                    nerve=self.nerve,
+                    nerve=self.nerve.state().global_nerve,
                     portfolio=self.portfolio,
                     sizing_multiplier=sizing_multiplier,
                 )
@@ -83,14 +84,14 @@ class Pit:
                     reviewed_signal = brain_review.signal
                     if not brain_review.approved:
                         rejections += 1
-                        self._nudge_nerve(-0.05)
+                        self.nerve.record_rejection(source.name)
                         self._log_note(source.name, symbol, brain_review.reason)
                         continue
 
                     council_verdict = self._run_council(brain_context, brain_review)
                     if council_verdict is not None and not council_verdict.approved:
                         rejections += 1
-                        self._nudge_nerve(-0.05)
+                        self.nerve.record_rejection(source.name)
                         self._log_note(council_verdict.source, symbol, council_verdict.reason)
                         continue
 
@@ -103,12 +104,12 @@ class Pit:
 
                 if not decision.approved or decision.intent is None:
                     rejections += 1
-                    self._nudge_nerve(-0.05)
+                    self.nerve.record_rejection(source.name)
                     self._log_note(source.name, symbol, decision.reason)
                     continue
 
                 approvals += 1
-                self._nudge_nerve(0.03)
+                self.nerve.record_win(source.name)
                 runner_decision = self.runner.submit_intent(decision.intent)
                 decisions.append(runner_decision)
 
@@ -117,7 +118,7 @@ class Pit:
             signals=signals_seen,
             approvals=approvals,
             rejections=rejections,
-            notes=f"nerve steady at {self.nerve:.2f}",
+            notes=self.nerve.state().summary(),
         )
         return decisions
 
@@ -129,9 +130,6 @@ class Pit:
 
     def stop(self) -> None:
         self._running = False
-
-    def _nudge_nerve(self, change: float) -> None:
-        self.nerve = max(0.1, min(1.0, self.nerve + change))
 
     def _log_tick(
         self,
@@ -152,7 +150,7 @@ class Pit:
                     "signals": signals,
                     "approvals": approvals,
                     "rejections": rejections,
-                    "nerve": round(self.nerve, 4),
+                    "nerve": self.nerve.state().global_nerve,
                 },
                 notes=notes,
             )
@@ -209,7 +207,7 @@ class Pit:
                 mode=self.settings.runtime.run_mode,
                 created_at=datetime.now(timezone.utc),
                 source=source,
-                payload={"symbol": symbol, "reason": reason, "nerve": self.nerve},
+                payload={"symbol": symbol, "reason": reason, "nerve": self.nerve.state().global_nerve},
                 notes=reason,
             )
         )
