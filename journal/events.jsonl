@@ -1,0 +1,18 @@
+{"ts":"2026-04-20T15:42:00Z","kind":"decide","subject":"fuzzi.philosophy","text":"rebuild as Fuzzi — money-is-fuzzy, flow-is-real. Paper trading first, nothing ships to live."}
+{"ts":"2026-04-20T15:42:00Z","kind":"done","subject":"fuzzi.spine","text":"created core: config, blotter, seatbelt, runner, common models","commit":"ebef227"}
+{"ts":"2026-04-20T17:55:00Z","kind":"done","subject":"fuzzi.pit","text":"pit runtime loop wired — signal sources → seatbelt → runner, tape feed scaffold","commit":"0e1489d"}
+{"ts":"2026-04-20T18:17:00Z","kind":"done","subject":"fuzzi.brain","text":"brain layer: Advisor + Council with weighted consensus, MockProvider for tests","commit":"ec88373"}
+{"ts":"2026-04-20T18:25:00Z","kind":"done","subject":"fuzzi.pit","text":"pit consults brain + council gate before seatbelt","commit":"0584bee"}
+{"ts":"2026-04-20T18:54:00Z","kind":"decide","subject":"brain.council","text":"weight caps 0.5x-1.5x, exponential decay 0.9, reset every 30 rulings. Prevents echo chamber and single-model dominance."}
+{"ts":"2026-04-20T18:54:00Z","kind":"done","subject":"brain.providers","text":"OpenClawProvider added; unanimous boost reduced from 1.2x to 1.1x","commit":"bffb9a3"}
+{"ts":"2026-04-20T19:00:00Z","kind":"decide","subject":"brain.auth","text":"primary LLM access via Codex CLI OAuth tokens (~/.codex/auth.json) — free via ChatGPT Plus, paid APIs only as fallback"}
+{"ts":"2026-04-20T19:00:00Z","kind":"done","subject":"brain.providers","text":"CodexOAuthProvider implemented with auto-refresh on 401","commit":"fbb851f"}
+{"ts":"2026-04-20T20:21:00Z","kind":"done","subject":"fuzzi.nerve","text":"NerveTracker: EWMA decay 0.85, win_boost 0.08, loss_penalty 0.12, asymmetric risk, per-strategy + global","commit":"f218760"}
+{"ts":"2026-04-20T20:50:00Z","kind":"done","subject":"fuzzi.config","text":"LLMSettings added; brain can locate auth.json and model defaults","commit":"ad70c89"}
+{"ts":"2026-04-20T20:57:00Z","kind":"done","subject":"fuzzi.merge","text":"pit/tape/signals merged with brain layer; CouncilGate separated from LLM Council","commit":"73692e2"}
+{"ts":"2026-04-21T00:00:00Z","kind":"decide","subject":"workflow.branches","text":"minimal branches: main (production-ready), dev (active work), data (archive). All three agents commit to dev."}
+{"ts":"2026-04-22T08:00:00Z","kind":"decide","subject":"workflow.lanes","text":"three-agent split: compute lane (heavy continuous work, remote box), judgment lane (brain/signals/design, local), testing lane (adversarial tests, backtests, validation)."}
+{"ts":"2026-04-22T08:00:00Z","kind":"decide","subject":"workflow.journal","text":"knowledge base = events.jsonl (source of truth) + state.json (current) + rendered markdown for GH Pages. Git provides versioning; tree-at-any-point via git show."}
+{"ts":"2026-04-22T08:30:00Z","kind":"done","subject":"fuzzi.regime","text":"regime detector scaffolded: efficiency_ratio + volatility indicators, five regimes (TRENDING_UP/DOWN, CHOPPY, CALM, VOLATILE). _classify logic left as open TODO."}
+{"ts":"2026-04-22T08:30:00Z","kind":"now","subject":"regime.classify","text":"open — thresholds that map (efficiency_ratio, volatility, direction) → regime + confidence need to be chosen"}
+{"ts":"2026-04-22T08:30:00Z","kind":"blocked","subject":"pit.nerve","text":"wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev"}

@@ -83,6 +83,10 @@ plugins:
 
 nav:
   - Home: index.md
+  - Journal:
+      - Latest: journal/index.md
+      - By subject: journal/by-subject.md
+      - Full chronology: journal/archive.md
   - Getting Started:
       - Setup Guide: setup.md
   - Architecture:
