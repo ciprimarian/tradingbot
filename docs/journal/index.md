@@ -23,14 +23,18 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `08:00` ◆ **workflow.journal** — knowledge base = events.jsonl (source of truth) + state.json (current) + rendered markdown for GH Pages. Git provides versioning; tree-at-any-point via git show.
 - `08:30` ✓ **fuzzi.regime** — regime detector scaffolded: efficiency_ratio + volatility indicators, five regimes (TRENDING_UP/DOWN, CHOPPY, CALM, VOLATILE). _classify logic left as open TODO.
 - `08:30` • **regime.classify** — open — thresholds that map (efficiency_ratio, volatility, direction) → regime + confidence need to be chosen
-- `08:30` ✗ **pit.nerve** — wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev
+- `08:30` ✗ **pit.nerve** — wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev (since resolved — see earlier done entry with commit f90bb22)
+- `09:30` ◆ **stack.language** — stay Python. LLM latency dominates critical path (seconds per advisor call); compute is microseconds. Rust/C foundation buys nothing on the bottleneck. Escalation path if profiling shows a hot function: NumPy → Numba → Cython → PyO3 Rust extension — in that order, one rung at a time.
+- `09:30` ◆ **workflow.voice** — no AI-speak. simple, concise, direct, with occasional wit. no corporate hedging, no motivational-poster sentences, no 'please consider'. applies to commits, journal entries, code comments, agent replies.
+- `09:30` ✓ **journal.rules** — RULES.md added — short-form rulebook every agent reads on session start. AGENTS.md now points at it.
+- `09:30` ✓ **journal.primers** — primers stripped of volatile 'current assignment' sections; assignments now live only in state.json.now keyed by lane.
 
 ### 2026-04-21
 
 - `00:00` ◆ **workflow.branches** — minimal branches: main (production-ready), dev (active work), data (archive). All three agents commit to dev.
-- `22:15` ✓ **pit.nerve** — pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior
+- `22:15` ✓ **pit.nerve** — pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior `[f90bb22]`
 - `22:22` · **tests.bootstrap** — conftest.py added: stubs ALPACA_API_KEY/SECRET env vars so tests collect without live credentials; exposes two pre-existing legacy integration tests (test_brokers::test_connection, test_strategies::test_data_fetch_and_strategy) that hit real Alpaca endpoints — fail with 401, not a new regression
-- `22:22` ✓ **tests.adversarial** — adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands then lock in the regime mapping `[f31664a]`
+- `22:22` ✓ **tests.adversarial** — adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands `[a4b29d5]`
 
 ### 2026-04-20
 
@@ -56,4 +60,4 @@ What happened, what's happening, what's next. Source of truth is `journal/events
 - `✗ blocked` — waiting on something
 - `· note` — observation
 
-_Rendered 2026-04-21 22:24 UTC from 21 events._
+_Rendered 2026-04-21 22:29 UTC from 25 events._

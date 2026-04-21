@@ -48,18 +48,30 @@ Every event grouped by the subsystem it touches.
 
 - `2026-04-20` ✓ created core: config, blotter, seatbelt, runner, common models `[ebef227]`
 
+## journal.primers
+
+- `2026-04-22` ✓ primers stripped of volatile 'current assignment' sections; assignments now live only in state.json.now keyed by lane.
+
+## journal.rules
+
+- `2026-04-22` ✓ RULES.md added — short-form rulebook every agent reads on session start. AGENTS.md now points at it.
+
 ## pit.nerve
 
-- `2026-04-21` ✓ pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior
-- `2026-04-22` ✗ wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev
+- `2026-04-21` ✓ pit now uses NerveTracker for sizing, tick summaries, and rejection/win updates; pit tests updated for EWMA behavior `[f90bb22]`
+- `2026-04-22` ✗ wiring NerveTracker into Pit blocked on compute-lane rebase to latest dev (since resolved — see earlier done entry with commit f90bb22)
 
 ## regime.classify
 
 - `2026-04-22` • open — thresholds that map (efficiency_ratio, volatility, direction) → regime + confidence need to be chosen
 
+## stack.language
+
+- `2026-04-22` ◆ stay Python. LLM latency dominates critical path (seconds per advisor call); compute is microseconds. Rust/C foundation buys nothing on the bottleneck. Escalation path if profiling shows a hot function: NumPy → Numba → Cython → PyO3 Rust extension — in that order, one rung at a time.
+
 ## tests.adversarial
 
-- `2026-04-21` ✓ adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands then lock in the regime mapping `[f31664a]`
+- `2026-04-21` ✓ adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands `[a4b29d5]`
 
 ## tests.bootstrap
 
@@ -76,4 +88,8 @@ Every event grouped by the subsystem it touches.
 ## workflow.lanes
 
 - `2026-04-22` ◆ three-agent split: compute lane (heavy continuous work, remote box), judgment lane (brain/signals/design, local), testing lane (adversarial tests, backtests, validation).
+
+## workflow.voice
+
+- `2026-04-22` ◆ no AI-speak. simple, concise, direct, with occasional wit. no corporate hedging, no motivational-poster sentences, no 'please consider'. applies to commits, journal entries, code comments, agent replies.
 

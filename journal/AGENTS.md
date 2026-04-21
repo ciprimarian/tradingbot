@@ -1,7 +1,6 @@
 # Agent protocol
 
-Fuzzi is built by three agents working in parallel. This document is the rulebook.
-All three agents: read this on every session start.
+Fuzzi is built by three agents working in parallel. This document is the **protocol** (schema, commands, file layout). For the **rulebook** — what you can and can't do — see `journal/RULES.md`. Read both on every session start.
 
 ## The knowledge base
 
