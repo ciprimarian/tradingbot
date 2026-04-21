@@ -605,6 +605,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#councilboard_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        council.board_model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fuzzibrain" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1379,6 +1390,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#councilboard_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        council.board_model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fuzzibrain" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1644,6 +1666,10 @@
 <li><code>2026-04-20</code> ✓ OpenClawProvider added; unanimous boost reduced from 1.2x to 1.1x <code>[bffb9a3]</code></li>
 <li><code>2026-04-20</code> ✓ CodexOAuthProvider implemented with auto-refresh on 401 <code>[fbb851f]</code></li>
 </ul>
+<h2 id="councilboard_model">council.board_model<a class="headerlink" href="#councilboard_model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>2026-04-22</code> ◆ council redesign: vote weight driven by per-verdict reasoning quality, not fixed role hierarchy. board member who came with specific data (numbers, indicator names, price levels) carries more weight than one who showed up with vague sentiment. spec written as 29 tests in test_council_board_model.py — judgment lane implements to pass them.</li>
+</ul>
 <h2 id="fuzzibrain">fuzzi.brain<a class="headerlink" href="#fuzzibrain" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>2026-04-20</code> ✓ brain layer: Advisor + Council with weighted consensus, MockProvider for tests <code>[ec88373]</code></li>
@@ -1706,6 +1732,7 @@
 <ul>
 <li><code>2026-04-21</code> ✓ adversarial tests for regime detector: 44 tests covering UNKNOWN path (empty/short bars), _efficiency_ratio and _return_volatility directly (boundary values, flat/spike/zigzag/zero/negative/extreme prices), adversarial observe() edge cases asserting only NotImplementedError propagates, and 10 contract tests that skip until _classify lands <code>[a4b29d5]</code></li>
 <li><code>2026-04-21</code> ✓ six adversarial test batches added (council, signals, seatbelt, backtest, nerve, blotter+runner): 157 new tests, 7 xfail documenting real bugs — NaN score propagation in AdvisorVerdict, 2v1 majority conviction collapse, sizing_multiplier=0 override by seatbelt floor, gap reversion zero win-rate under next-bar fill model, inverted regime preference, global nerve cratering from single strategy <code>[5defe6e]</code></li>
+<li><code>2026-04-22</code> ✓ wrote board-model council spec: 29 tests covering _score_reasoning heuristic (empty/vague/specific/rich reasoning), AdvisorVerdict.reasoning_quality field, board-model weighting in rule(), conviction modulation, and old-vs-new behavioral comparison. 28 xfailed (unimplemented), 1 regression anchor passing. full suite now: 288 passing, 35 xfailed, 3 failing (integration), 10 skipped.</li>
 </ul>
 <h2 id="testsbootstrap">tests.bootstrap<a class="headerlink" href="#testsbootstrap" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1753,7 +1780,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="April 21, 2026 23:09:20 UTC"><span class="timeago" datetime="2026-04-21T23:09:20+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="April 21, 2026 23:09:20 UTC">2026-04-21</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="April 21, 2026 23:21:38 UTC"><span class="timeago" datetime="2026-04-21T23:21:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="April 21, 2026 23:21:38 UTC">2026-04-21</span>
   </span>
 
     
